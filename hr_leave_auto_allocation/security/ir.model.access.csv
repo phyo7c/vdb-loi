@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_hr_leave_auto_allocation_officer,hr.leave.auto.allocation.officer,model_hr_leave_auto_allocation,hr_payroll.group_hr_payroll_user,1,1,1,1
-access_hr_extend_probation,access_hr_extend_probation,model_hr_extend_probation,base.group_user,1,1,1,1

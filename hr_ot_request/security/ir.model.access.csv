@@ -1,7 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_ot_request_user,access_ot_request_user,model_ot_request,hr_attendance.group_hr_attendance_user,1,1,1,1
-access_ot_request_line_user,access_ot_request_line_user,model_ot_request_line,hr_attendance.group_hr_attendance_user,1,1,1,1
-access_decline_response_user,access_decline_response_user,model_decline_response,hr_attendance.group_hr_attendance_user,1,1,1,1
-access_overtime_request_report_user,access_overtime_request_report_user,model_overtime_request_report,hr_attendance.group_hr_attendance_user,1,1,1,1
-
-
