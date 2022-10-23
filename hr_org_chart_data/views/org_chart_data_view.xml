@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <record model="ir.ui.view" id="view_hr_org_chart_data_tree">
+		<field name="name">hr.org.chart.data.tree</field>
+		<field name="model">hr.org.chart.data</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Organizational Chart Data">
+				<field name="id" />
+				<field name="record_id" />
+				<field name="level" />
+				<field name="data_type" />
+				<field name="name" />
+				<field name="employee_name" />
+				<field name="job_title" />
+				<field name="parent_id" />
+				<field name="parent_type" />
+			</tree>
+		</field>
+	</record>
+
+    <record model="ir.actions.act_window" id="action_hr_org_chart_data">
+		<field name="name">Organizational Chart Data</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">hr.org.chart.data</field>
+		<field name="view_mode">tree,form</field>
+		<field name="view_id" ref="view_hr_org_chart_data_tree" />
+	</record>
+
+    <menuitem id="menu_org_chart_data"
+            name="Org Chart Data"
+            action="action_hr_org_chart_data"
+            parent="hr.menu_human_resources_configuration"
+            sequence="64"/>
+</odoo>

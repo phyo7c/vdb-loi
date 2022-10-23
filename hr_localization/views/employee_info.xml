@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+	    <record id="hr_employee_inherit_form_view" model="ir.ui.view">
+			<field name="name">hr.employee.form</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form" />
+			<field name="arch" type="xml">	
+			    <!-- <xpath expr="//field[@name='department_id']" position="before">
+					<field name="branch_id"/>
+				</xpath> -->
+				
+				
+				<xpath expr="//field[@name='children']" position="after">
+					<field name="father_name" attrs="{'required':[('father_exemption','!=',False)]}"/>
+					<field name="father_exemption" />
+					<field name="mother_name" attrs="{'required':[('mother_exemption','!=',False)]}"/>
+					<field name="mother_exemption" />
+                    <field name="spouse_exemption" />
+				</xpath>
+ 					<xpath expr="//group[@name='has_work_permit']" position="after">
+                        <group string="Previous Tax Information">
+                            <field name="salary_total" />
+                            <field name="ssb_not_calculate" />
+                            <!-- <field name="tax_paid" />
+                            <field name="financial_year" /> -->
+                        </group>
+ 				</xpath>
+            </field>
+		</record>
+    </data>
+</odoo>

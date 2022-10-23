@@ -1,0 +1,41 @@
+<odoo>
+    <data>
+        <record id="view_planning_import_wizard" model="ir.ui.view">
+            <field name="name">Planning Import Form</field>
+            <field name="model">planning.import</field>
+            <field name="arch" type="xml">
+                <form string="Import Planning">
+                    <group>
+                        <field name="file" filename="pl_fname"/>
+                        <field name="pl_fname" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button
+                        name="import_data"
+                        type="object"
+                        string="Import"
+                        class="oe_highlight"
+                        help="This will import Planning Data"
+                    />
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_planning_import" model="ir.actions.act_window">
+            <field name="name">Import Planning</field>
+            <field name="res_model">planning.import</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_planning_import_wizard"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            id="menu_planning_import"
+            name="Import Planning"
+            action="action_planning_import"
+            parent="planning.planning_menu_schedule"
+            sequence="60"/>
+    </data>
+</odoo>

@@ -1,0 +1,41 @@
+<odoo>
+    <data>
+        <record id="view_attendance_raw_import_wizard" model="ir.ui.view">
+            <field name="name">Attendance Raw Import Form</field>
+            <field name="model">attendance.raw.import</field>
+            <field name="arch" type="xml">
+                <form string="Import Attendance Raw">
+                    <group>
+                        <field name="import_file" filename="import_fname"/>
+                        <field name="import_fname" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button
+                        name="import_data"
+                        type="object"
+                        string="Import"
+                        class="oe_highlight"
+                        help="This will import Attendance Data"
+                    />
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_attendance_raw_import" model="ir.actions.act_window">
+            <field name="name">Attendance Raw Import</field>
+            <field name="res_model">attendance.raw.import</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_attendance_raw_import_wizard"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            id="menu_attendance_raw_import"
+            name="Attendance Raw Import"
+            action="action_attendance_raw_import"
+            parent="menu_hr_attendance_raw"
+            sequence="60"/>
+    </data>
+</odoo>

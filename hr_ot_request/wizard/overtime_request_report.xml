@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_overtime_request_report" model="ir.ui.view">
+        <field name="name">overtime.request.report.form</field>
+        <field name="model">overtime.request.report</field>
+        <field name="arch" type="xml">
+            <form string ="Overtime Request Report">
+                <group>
+                    <group>
+                        <field name = "date_from" required = 'True'/>
+                        <field name = "date_to" required = 'True'/>
+                        <field name = "branch" required = 'True'/>
+                        <field name = "department_ids" required = 'True' widget="many2many_tags"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string='Submit' name = "ot_request_report_wizard" type='object' class='btn-primary'/>
+                    <button string='Cancel' class='btn-default' special="cancel"/>	
+                </footer>
+            </form>		
+        </field>
+    </record>
+
+    <record id="open_menu_overtime_request_report" model="ir.actions.act_window">
+        <field name="name">Overtime Request Report</field>
+        <field name="res_model">overtime.request.report</field>        
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_overtime_request_report"/>	
+    </record>
+
+    <menuitem id = "menu_ot_request_report"
+        name = "Overtime Request Report"
+        parent = "hr_attendance_raw.menu_hr_attendance_raw"
+        action = "open_menu_overtime_request_report"/>
+
+</odoo>

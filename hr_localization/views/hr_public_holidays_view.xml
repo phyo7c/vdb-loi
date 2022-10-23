@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<record model="ir.ui.view" id="view_public_holidays_tree">
+			<field name="name">hr.public.holidays.tree</field>
+			<field name="model">hr.public.holidays</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Public Holidays">
+					<field name="year" />
+					<field name="company_id" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_public_holidays_form">
+			<field name="name">hr.public.holidays.form</field>
+			<field name="model">hr.public.holidays</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Public Holidays">
+					<sheet>
+						<group>
+							<field name="year" />
+							<field name="company_id" />
+						</group>
+						<group>
+							<notebook>
+				               	<page string="Public Holidays">
+				                   	<field name="holiday_line">
+									    <tree editable="bottom">
+										    <field name="date" width='0.5'/>
+										    <field name="name"/>
+										    <field name="variable" width='o.5'/>
+											<field name="type" required="1"/>
+									    </tree>
+					                </field>
+				                 </page>
+		                	</notebook>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="open_view_public_holidays_form">
+			<field name="name">Public Holidays</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.public.holidays</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_public_holidays_tree" />
+		</record>
+
+		<menuitem id="menu_public_holidays" name="Public Holidays" parent="hr_holidays.menu_hr_holidays_configuration"
+			action="open_view_public_holidays_form" sequence="59" />
+	</data>
+</odoo>

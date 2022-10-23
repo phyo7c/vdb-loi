@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+	
+		<record model="ir.ui.view" id="view_hr_leave_auto_allocation_form_inherit">
+			<field name="name">hr.leave.auto.allocation.form</field>
+			<field name="model">hr.leave.auto.allocation</field>
+			<field name="inherit_id" ref="hr_leave_auto_allocation.view_hr_leave_auto_allocation_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='deduct_based_on_worked_day']" position="after">
+					<field name="carried_forward" />
+					<field name="prorated"/>
+					<field name="prorated_based_on"/>
+				</xpath>
+			</field>
+		</record>
+
+    </data>
+</odoo>

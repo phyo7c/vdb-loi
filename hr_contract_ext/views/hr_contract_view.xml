@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+	    <record id="hr_contract_form_view_inherit" model="ir.ui.view">
+			<field name="name">hr.contract.form</field>
+			<field name="model">hr.contract</field>
+			<field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='department_id']" position="after">
+					<field name="job_grade_id" required="1"/>
+				</xpath>
+				<xpath expr="//div[@name='wage']" position="after">
+					<label for="first_attendance_allowance"/>
+					<div class="o_row" name="first_attendance_allowance">
+						<field name="first_attendance_allowance" nolabel="1"/>
+					</div>
+					<label for="second_attendance_allowance"/>
+					<div class="o_row" name="second_attendance_allowance">
+						<field name="second_attendance_allowance" nolabel="1"/>
+					</div>
+					<label for="ot_rate"/>
+					<div class="o_row" name="ot_rate">
+						<field name="ot_rate" nolabel="1"/>
+					</div>
+					<label for="ot_duty_per_hour"/>
+					<div class="o_row" name="ot_duty_per_hour">
+						<field name="ot_duty_per_hour" nolabel="1"/>
+						<span>/ hour</span>
+					</div>
+					<label for="ot_allowance_per_day"/>
+					<div class="o_row" name="ot_allowance_per_day">
+						<field name="ot_allowance_per_day" nolabel="1"/>
+						<span>/ day</span>
+					</div>
+				</xpath>
+				<xpath expr="//field[@name='date_end']" position="after">
+					<field name="trial_date_end" required="1"/>
+				</xpath>
+			</field>
+		</record>
+    </data>
+</odoo>

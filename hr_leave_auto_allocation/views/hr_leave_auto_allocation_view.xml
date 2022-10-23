@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="hr_leave_allocation_view_form" model="ir.ui.view">
+			<field name="name">hr.leave.allocation.view.form</field>
+			<field name="model">hr.leave.allocation</field>
+			<field name="inherit_id" ref="hr_holidays.hr_leave_allocation_view_form_manager"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='state']" position="replace">
+					<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate,expired"/>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="hr_leave_allocation_view_form_manager_inherit" model="ir.ui.view">
+			<field name="name">hr.leave.allocation.view.form.manager</field>
+			<field name="model">hr.leave.allocation</field>
+			<field name="inherit_id" ref="hr_holidays.hr_leave_allocation_view_form_manager"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='mode_company_id']" position="after">
+					<field name="fiscal_year" groups="hr_holidays.group_hr_holidays_user"/>
+					<field name="carry_leave"/>
+				</xpath>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_hr_leave_auto_allocation_tree">
+			<field name="name">hr.leave.auto.allocation.tree</field>
+			<field name="model">hr.leave.auto.allocation</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Leave Auto Allocation">
+					<field name="holiday_status_id" />
+					<field name="gender" />
+					<field name="based_on" />
+					<field name="validity_year_type" />
+					<field name="maximum_allocation_days" />
+					<field name="deduct_based_on_worked_day" />
+					<field name="minimum_worked_days_per_month" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_hr_leave_auto_allocation_form">
+			<field name="name">hr.leave.auto.allocation.form</field>
+			<field name="model">hr.leave.auto.allocation</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Leave Auto Allocation">
+					<header>
+						<button string="Approval" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
+						<button string="Approve" name="action_approve" states="approval" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight" />
+						<button string="Cancel" name="action_cancel" type="object" states="approval,approve" groups="hr_holidays.group_hr_holidays_manager"/>
+						<button string="Reset to Draft" name="action_draft" states="approval,cancel" type="object" />
+						<field name="state" widget="statusbar" statusbar_visible="draft,approval,approve"/>
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="holiday_status_id" attrs="{'readonly': [('state', '!=', 'draft')]}" required="True"/>
+								<field name="gender" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+							</group>
+						</group>
+						<notebook>
+							<page string="Details">
+								<group>
+									<group>
+										<field name="allocate_on" attrs="{'readonly': [('state', '!=', 'draft')]}" required="True" />
+										<field name="employee_categ_ids" widget="many2many_tags"
+											   attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('allocate_on', '!=', 'employee_tags')], 'required': [('allocate_on', '=', 'employee_tags')]}" />
+										<field name="department_ids" widget="many2many_tags"
+											   attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('allocate_on', '!=', 'department')], 'required': [('allocate_on', '=', 'department')]}" />
+										<field name="position_ids" widget="many2many_tags"
+											   attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('allocate_on', '!=', 'position')], 'required': [('allocate_on', '=', 'position')]}" />
+										<field name="based_on" attrs="{'readonly': [('state', '!=', 'draft')]}" required="True" />
+										<field name="validity_year_type" attrs="{'readonly': [('state', '!=', 'draft')]}" required="True" />
+										<label for="validate_from" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+										<div class="o_row" name="validate_from" attrs="{'readonly': [('state', '!=', 'draft')]}">
+											<field name="validate_from" nolabel="1" attrs="{'readonly': [('state', '!=', 'draft')]}" required="True"/>
+											<span>- Days</span>
+										</div>
+										<label for="maximum_allocation_days" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+										<div class="o_row" name="maximum_allocation_days" attrs="{'readonly': [('state', '!=', 'draft')]}">
+											<field name="maximum_allocation_days" nolabel="1" attrs="{'readonly': [('state', '!=', 'draft')]}" required="True"/>
+											<span>- Days</span>
+										</div>
+										<field name="deduct_based_on_worked_day" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+										<label for="minimum_worked_days_per_month" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('deduct_based_on_worked_day', '=', False)]}"/>
+										<div class="o_row" name="minimum_worked_days_per_month" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('deduct_based_on_worked_day', '=', False)]}">
+											<field name="minimum_worked_days_per_month" nolabel="1" attrs="{'readonly': [('state', '!=', 'draft')], 'required': [('deduct_based_on_worked_day', '=', True)]}"/>
+											<span>- Days</span>
+										</div>
+									</group>
+								</group>
+							 </page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+        <record model="ir.actions.act_window" id="action_hr_leave_auto_allocation">
+			<field name="name">Leave Auto Allocation</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.leave.auto.allocation</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_hr_leave_auto_allocation_tree" />
+		</record>
+
+        <menuitem
+            id="hr_leave_auto_allocation_menu_configuration"
+            action="action_hr_leave_auto_allocation"
+            name="Auto Leave Allocation"
+            parent="hr_holidays.menu_hr_holidays_configuration"
+            groups="hr_holidays.group_hr_holidays_user"
+            sequence="9"/>
+    </data>
+</odoo>

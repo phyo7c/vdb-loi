@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <report 
+        id="job_position_checklist_report_id" 
+        model="employee.performance" 
+        string="Job Position Check List"
+        report_type="qweb-pdf"
+        name="employee_performance.report_job_position_checklist_qweb"
+        file="employee_performance.report_job_position_checklist_qweb"
+        print_report_name="'Job Position Check List"
+        menu="False"
+    />
+
+    <record id="job_position_checklist_report" model="ir.actions.report">
+        <field name="name">Job Position Check List</field>
+        <field name="model">report.employee_performance.report_job_position_checklist_qweb</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">employee_performance.report_job_position_checklist_qweb</field>
+    </record>
+
+    <template id="report_job_position_checklist_qweb">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <br></br>
+                    <br></br>
+                    <h2>
+                        <span >Job Position Check List</span>
+                    </h2>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Fiscal Year</th>
+                                <th>Job Position</th>
+                                <th>Company</th>
+                                <th>Branch</th>
+                                <th>Key Performance Template</th>
+                                <th>Created Job Position in PMS</th>
+                                <th>Current Job Position</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="sr_no" t-value="0"/>
+                            <t t-set="data" t-value="get_pms_list"/>
+                            <tr t-foreach="data.keys()" t-as="d">
+                                <t t-set="sr_no" t-value="sr_no+1"/>
+                                <td ><t t-esc="sr_no"/></td>
+                                <td><span t-esc="data[d][0]"/></td>
+                                <td><span t-esc="data[d][1]"/></td>
+                                <td><span t-esc="data[d][2]"/></td>
+                                <td><span t-esc="data[d][3]"/></td>
+                                <td><span t-esc="data[d][4]"/></td>
+                                <td><span t-esc="data[d][5]"/></td>
+                                <td><span t-esc="data[d][6]"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

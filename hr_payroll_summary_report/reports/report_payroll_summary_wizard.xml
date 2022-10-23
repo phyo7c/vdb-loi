@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_report_payroll_summary_wizard_wizard" model="ir.ui.view">
+            <field name="name">Payroll Report Summary Wizard Form</field>
+            <field name="model">report.payroll.summary.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Payroll Summary Report">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="month"/>
+                                <field name="date_from"/>
+                                <field name="branch_id"/>
+                            </group>
+                            <group>
+                                <field name="year"/>
+                                <field name="date_to"/>
+                                <field name="filter_by"/>
+                            </group>
+                        </group>
+                        <footer>
+                            <button name="print_xlsx" string="Generate" type="object" class="oe_highlight"/>
+                            or
+                            <button string="Cancel" class="oe_link" special="cancel"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_report_payroll_summary_wizard">
+            <field name="name">Payroll Summary Report</field>
+            <field name="res_model">report.payroll.summary.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="hr_menu_payroll_summary_report"
+                  action="action_report_payroll_summary_wizard"
+                  name="Payroll Summary Report"
+                  parent="hr_payroll.menu_hr_payroll_report"
+                  groups="hr_payroll.group_hr_payroll_manager"
+                  sequence="12"
+        />
+
+    </data>
+</odoo>

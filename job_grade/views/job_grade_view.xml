@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<record model="ir.ui.view" id="view_job_grade_tree">
+			<field name="name">job.grade.tree</field>
+			<field name="model">job.grade</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Job Grade">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_job_grade_form">
+			<field name="name">job.grade.form</field>
+			<field name="model">job.grade</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Job Grade">
+					<sheet>
+						<group col="2">
+							<group>
+								<field name="name" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="open_view_job_grade_form">
+			<field name="name">Job Grade</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">job.grade</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_job_grade_tree" />
+		</record>
+
+		<menuitem id="menu_job_grade" name="Job Grade" parent="hr_work_entry_contract_enterprise.menu_hr_payroll_configuration"
+			action="open_view_job_grade_form" sequence="59" />
+
+	</data>
+</odoo>

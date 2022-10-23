@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<record model="ir.ui.view" id="view_hr_deduction_tree">
+			<field name="name">hr.deduction.tree</field>
+			<field name="model">hr.deduction</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Deduction">
+					<field name="deduction_config_id" />
+					<field name="code" />
+					<field name="amount" />
+					<field name="employee_id" />
+					<field name="effective_date" />
+					<field name="effective_type" />
+					<field name="end_date" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_hr_deduction_form">
+			<field name="name">hr.deduction.form</field>
+			<field name="model">hr.deduction</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Deduction">
+					<sheet>
+					    <group>
+					        <group>
+						        <field name="deduction_config_id" required="True"/>
+								<field name="amount" required="True"/>
+								<field name="employee_id" required="True"/>
+						    </group>
+							<group>							
+								<field name="effective_date" />
+								<field name="effective_type" />
+								<field name="end_date" />
+							</group>
+					    </group>					    
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_deduction_config_tree">
+			<field name="name">deduction.config.tree</field>
+			<field name="model">deduction.config</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Deduction Config">
+					<field name="name" />
+					<field name="code" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_deduction_config_form">
+			<field name="name">deduction.config.form</field>
+			<field name="model">deduction.config</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Deduction Config">
+					<sheet>
+					    <group>
+					        <group>
+						        <field name="name" required="True"/>
+								<field name="code" required="True"/>
+						    </group>
+					    </group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="open_view_hr_deduction_form">
+			<field name="name">Deduction</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.deduction</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_hr_deduction_tree" />
+		</record>
+
+		<record model="ir.actions.act_window" id="open_view_deduction_config_form">
+			<field name="name">Deduction Config</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">deduction.config</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_deduction_config_tree" />
+		</record>
+
+		<menuitem id="menu_hr_deduction" name="Deduction" parent="hr_payroll.menu_hr_salary_configuration"
+			action="open_view_hr_deduction_form" sequence="60" />
+		<menuitem id="menu_deduction_config" name="Deduction Config" parent="hr_payroll.menu_hr_salary_configuration"
+			action="open_view_deduction_config_form" sequence="59" />
+
+	</data>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="ot_request_mail_template" model="mail.template">
+		    <field name="name">OT Request Mail Template</field>
+		    <field name="model_id" ref="hr_ot_request.model_ot_request_line"/>
+		    <field name="auto_delete" eval="False"/>
+		    <field name="email_from">${object.requested_employee_id.work_email}</field>
+		    <field name="email_to">${object.employee_id.work_email}</field>
+		    <field name="subject">OT Request From manager to ${object.employee_id.name}</field>
+		    <field name="body_html" type="xml">
+		        <div>
+		        	Dear ${object.employee_id.name},<br/><br/>
+                    I would like to invite you the overtime. please check it.
+                    <br/>Best Regards,<br/>
+                    ${object.create_uid.name}
+                    <br/>
+		    	</div>
+		     </field>
+		</record>
+    </data>
+</odoo>

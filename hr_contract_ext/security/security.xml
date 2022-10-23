@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+        <function name="write" model="ir.model.data">
+            <function name="search" model="ir.model.data">
+                <value eval="[('module', '=', 'hr_contract'), ('name', '=', 'group_hr_contract_manager')]"/>
+            </function>
+            <value eval="{'noupdate': False}"/>
+        </function>
+        
+        <record id="hr_contract.group_hr_contract_manager" model="res.groups">
+            <field name="name">User</field>
+        </record>
+
+    </data>
+    
+
+</odoo>

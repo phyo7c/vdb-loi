@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+	    <record id="hr_employee_inherit_form_view" model="ir.ui.view">
+			<field name="name">hr.employee.form</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form" />
+			<field name="arch" type="xml">
+			<!--Header-->
+				<xpath expr="//h2" position="before">
+					<h2>
+						<field name="name_in_mm" placeholder="Name (in Myanmar)" required="1"/>
+					</h2>
+				</xpath>
+			<!--Private Information-->
+				<xpath expr="//page[@name='personal_information']/group" position="inside">
+			        <group string="SSB">
+						<field name="ssb_not_calculate" />
+						<field name="over_60_ssb" />
+						<field name="over_60_ssb_percent" />
+                        <field name="ssb_no" attrs="{'invisible': [('ssb_not_calculate', '=', True)]}"/>
+                        <field name="ssb_issue_date" attrs="{'invisible': [('ssb_not_calculate', '=', True)]}"/>
+                        <field name="ssb_temporary_card" attrs="{'invisible': [('ssb_not_calculate', '=', True)]}"/>
+                        <field name="ssb_temporary_card_no" attrs="{'invisible': [('ssb_not_calculate', '=', True)]}" />
+                        <field name="smart_card" attrs="{'invisible': [('ssb_not_calculate', '=', True)]}"/>
+                        <field name="smart_card_issue_date" attrs="{'invisible': [('ssb_not_calculate', '=', True)]}"/>
+                        <field name="smart_card_no" attrs="{'invisible': [('ssb_not_calculate', '=', True)]}"/>
+                    </group>
+				</xpath>
+				<xpath expr="//field[@name='birthday']" position="after">
+					<field name="age"/>
+				</xpath>
+				<xpath expr="//field[@name='marital']" position="after">
+					<field name="spouse_exemption" />
+				</xpath>
+				<xpath expr="//field[@name='children']" position="after">
+					<field name="father_name" attrs="{'required':[('father_exemption','!=',False)]}"/>
+					<field name="father_exemption" />
+					<field name="mother_name" attrs="{'required':[('mother_exemption','!=',False)]}"/>
+					<field name="mother_exemption" />
+				</xpath>
+				<xpath expr="//group[@name='has_work_permit']" position="after">
+					<group string="Previous Tax Information">
+						<field name="salary_total" />
+						<field name="tax_paid" />
+						<field name="financial_year" />
+					</group>
+ 				</xpath>
+				<xpath expr="//field[@name='department_id']" position="before">
+					<field name="branch_id"/>
+				</xpath>
+				<xpath expr="//field[@name='parent_id']" position="before">
+
+					<field name="approve_manager"/>
+				</xpath>
+			<!--HR Setting-->
+				<field name="user_id" position="after">
+                    <field name="joining_date"/>
+					<field name="confirmation_date"/>
+					<field name="service_years"/>
+                </field>
+<!--				<xpath expr="//field[@name='pin']" position="before">-->
+<!--			        <label for="fingerprint_id"/>-->
+<!--                    <div class="o_row">-->
+<!--                        <field name="fingerprint_id" required="True"/>-->
+<!--                        <button name="button_generate_code" string="Generate Code" class="btn btn-link" type="object"/>-->
+<!--                    </div>-->
+<!--				</xpath>-->
+				<xpath expr="//group[@name='identification_group']" position="inside">
+					<field name="no_need_attendance" />
+<!--					<field name="if_exclude" />-->
+				</xpath>
+				<!--Access Right-->
+				<xpath expr="//notebook" position="inside">
+					<page name="access_right" string="Access Rights">
+						<group col="3">
+							<group string="Default">
+								<field name="allow_leave_request" />
+								<field name="allow_leave_report" />
+								<field name="allow_attendance_report" />
+								<field name="allow_organization_chart" />
+								<field name="allow_pms" />
+								<field name="allow_payslip" />
+								<field name="allow_overtime" />
+								<field name="allow_approval" />
+							</group>
+							<group string="Administration">
+								<field name="mobile_app_attendance" />
+							</group>
+						</group>
+					</page>
+				</xpath>
+            </field>
+        </record>
+
+		<record id="view_hr_job_type_form" model="ir.ui.view">
+            <field name="name">hr.job.type.form</field>
+            <field name="model">hr.job.type</field>
+            <field name="arch" type="xml">
+                <form string="Job Type">
+                    <sheet>
+						<group>
+							<field name="name"/>
+						</group>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="view_hr_job_type_tree" model="ir.ui.view">
+            <field name="name">hr.job.type.tree</field>
+            <field name="model">hr.job.type</field>
+            <field name="arch" type="xml">
+                <tree string="Job Type" sample="1">
+                   <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_hr_job_type" model="ir.actions.act_window">
+            <field name="name">Job Position Type</field>
+            <field name="res_model">hr.job.type</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Ready to recruit more efficiently?
+              </p><p>
+                Let's create a job position type.
+              </p>
+            </field>
+        </record>
+
+		<menuitem
+                id="menu_view_hr_job_type"
+                action="action_hr_job_type"
+                parent="hr.menu_human_resources_configuration"
+                groups="base.group_no_one"
+               />
+
+		<record id="view_job_form_inherits" model="ir.ui.view">
+			<field name="name">hr.job.form.inherit</field>
+            <field name="model">hr.job</field>
+			<field name="inherit_id" ref="hr.view_hr_job_form"/>
+            <field name="arch" type="xml">
+				<xpath expr="//form/sheet/div[hasclass('oe_title')]" position="after">
+					<group>
+                        <group>
+                            <field name="job_type"/>
+                        </group>
+                        <group>
+                          <field name="daily_wages"/>
+                        </group>
+                        <group>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+				</xpath>
+			</field>
+		</record>
+    </data>
+</odoo>

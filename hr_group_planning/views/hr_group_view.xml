@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_groups_type_tree_view" model="ir.ui.view">
+        <field name="name">hr.employee.groups.type.tree.view</field>
+        <field name="model">hr.employee.groups</field>
+        <field name="arch" type="xml">
+            <tree name="Employee Groups" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_employee_groups_type_action" model="ir.actions.act_window">
+        <field name="name">Employee Groups</field>
+        <field name="res_model">hr.employee.groups</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="hr_employee_group_inherit_form_view" model="ir.ui.view">
+			<field name="name">hr.employee.group.form</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form" />
+			<field name="arch" type="xml">
+                <xpath expr="//sheet/group" position="inside">
+                    <group string="Roster Detail">
+                        <field name="group_id"/>
+                        <field name="is_roaster"/>
+                    </group>
+				</xpath>
+            </field>
+    </record>
+
+    <menuitem
+        id="hr_employee_groups_type_menu"
+        name="Groups"
+        action="hr_employee_groups_type_action"
+        parent="hr.menu_human_resources_configuration_employee"
+        sequence="4"
+        groups="base.group_no_one"/>
+</odoo>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id='attendance_employee_action' model='ir.actions.act_window'>
+        <field name="name">Employee Early Out</field>
+        <field name="res_model">hr.employee.early.out</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+       <menuitem id="menu_hr_attendance_early"
+				  name="Early Out Employee"
+				  parent="hr_attendance.menu_hr_attendance_view_attendances"
+				  action="attendance_employee_action"
+				  groups="hr_attendance.group_hr_attendance_user"
+				  sequence="10" />
+
+	    <menuitem id="menu_hr_attendance_view_attendances_1"
+	              name="Attendances" parent="hr_attendance.menu_hr_attendance_view_attendances"
+	              sequence="10" groups="hr_attendance.group_hr_attendance_user"
+	              action="hr_attendance.hr_attendance_action"/>
+
+	<!-- Tree(list) View -->
+    <record id="hr_employee_early_out_tree_form" model="ir.ui.view">
+        <field name="name">Employee Early Out List</field>
+        <field name="model">hr.employee.early.out</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="date"/>
+                <field name="employee_id"/>
+                <field name="branch_id" />
+                <field name="manager_id" />
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="hr_employee_early_out_view_form" model="ir.ui.view">
+        <field name="name">Employee Early Out Form</field>
+        <field name="model">hr.employee.early.out</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                     <button name="action_request" string="Request" type="object" class="oe_highlight" attrs="{'invisible':[('state', '!=', 'draft')]}"/>
+                     <button name="action_approve" string="Approve" type="object" class="oe_highlight" attrs="{'invisible':[('state', '!=', 'request')]}"/>
+                     <button name="action_cancel" string="Cancel" type="object" class="oe_highlight" attrs="{'invisible':[('state', '!=', 'approve')]}"/>
+                     <button name="action_to_draft" string="Set to Draft" type="object" class="oe_highlight" attrs="{'invisible':[('state', '!=', 'cancel')]}"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                <group>
+                    <group>
+                         <field name="date"/>
+                         <field name="employee_id"/>
+                         <field name="branch_id" />
+                         <field name="reason" />
+                    </group>
+                    <group>
+                         <field name="manager_id" />
+                         <field name="department_ids" widget="many2many_tags"/>
+                         <field name="early_out_time" widget="float_time"/>
+                    </group>
+                </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

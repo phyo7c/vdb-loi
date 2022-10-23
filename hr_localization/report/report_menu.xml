@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_ygn_payslip" model="ir.actions.report">
+            <field name="name">Yangon Payslip</field>
+            <field name="model">hr.payslip</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">hr_localization.report_ygn_payslip</field>
+            <field name="report_file">hr_localization.report_ygn_payslip</field>
+            <field name="print_report_name">'Payslip - %s' % (object.employee_id.name)</field>
+            <field  name="binding_model_id" ref="hr_payroll.model_hr_payslip" />
+            <field name="binding_type">report</field>
+        </record>
+
+
+        
+
+        <record id="view_hr_payslip_form_inherit" model="ir.ui.view">
+            <field name="name">hr.payslip.form.inherit</field>
+            <field name="model">hr.payslip</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button string="Yangon Payslip" name="%(action_report_ygn_payslip)d" type="action"/>
+                    <button string="Site Payslip" name="%(action_report_ygn_payslip)d" type="action"/>
+
+                </xpath>
+                
+                    
+            </field>
+        </record>
+
+    </data>  
+</odoo>

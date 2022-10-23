@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<record model="ir.ui.view" id="view_ot_allowance_tree">
+			<field name="name">ot.allowance.tree</field>
+			<field name="model">ot.allowance</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="OT Allowance">
+					<field name="job_grade_id" />
+					<field name="amount" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_ot_allowance_form">
+			<field name="name">ot.allowance.form</field>
+			<field name="model">ot.allowance</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="OT Allowance">
+				    <header>
+                        <button string="Approve" class="btn-primary" type="object" name="approve"
+							attrs="{'invisible': [('state','!=','draft')]}"/>
+                        <button string="Reset to Draft" class="btn-primary" type="object" name="reset_to_draft"
+							attrs="{'invisible': [('state','!=','approve')]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,approve"/>
+                    </header>
+					<sheet>
+					    <group>
+					        <group>
+						        <field name="job_grade_id" required="True"/>
+						    </group>
+							<group>							
+								<field name="amount" required="True"/>
+							</group>
+					    </group>
+					    <notebook>
+							<page string="Lines">
+								<field name="line_ids">
+									<tree editable="bottom">
+										<field name="employee_id" />
+									</tree>
+								</field>
+							</page>
+	                	</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="open_view_ot_allowance_form">
+			<field name="name">OT Allowance</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">ot.allowance</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_ot_allowance_tree" />
+		</record>
+
+		<menuitem id="menu_ot_allowance" name="OT Allowance" parent="hr_work_entry_contract_enterprise.menu_hr_payroll_configuration"
+			action="open_view_ot_allowance_form" sequence="60" />
+
+	</data>
+</odoo>

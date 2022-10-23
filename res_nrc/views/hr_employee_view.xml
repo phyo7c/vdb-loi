@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="hr_employee_inherit_form_view" model="ir.ui.view">
+			<field name="name">hr.employee.form</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='identification_id']" position="after">
+					<label for="nrc_number" name="NRC Entry"/>
+					<div class="o_address_format">
+						<field name="nrc_region_code" style="width: 15%" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>/
+						<field name="nrc_prefix" style="width: 30%" domain="[('nrc_region', '=', nrc_region_code)]" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" />(
+						<field name="nrc_type" style="width: 15%" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" /> )
+						<field name="nrc_number" style="width: 25%" />
+					</div>
+					<field name="nrc" readonly="1" force_save="1"/>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</odoo>
