@@ -1,0 +1,4 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+access_raw_salary_rule,access_raw_salary_rule,model_raw_salary_rule,base.group_user,1,1,1,1
+access_salary_rule_mapping,access_salary_rule_mapping,model_salary_rule_mapping,base.group_user,1,1,1,1
+access_salary_rule_mapping_line,access_salary_rule_mapping_line,model_salary_rule_mapping_line,base.group_user,1,1,1,1

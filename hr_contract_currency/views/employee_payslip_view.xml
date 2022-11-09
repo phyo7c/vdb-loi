@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="view_employee_payslip_form_inherit_currency" model="ir.ui.view">
+            <field name="name">view.employee.payslip.form.inherit.currency</field>
+            <field name="model">hr.payslip</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='payslip_run_id']" position="after">
+                    <field name="payslip_currency_id"/>
+                    <field name="salary"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

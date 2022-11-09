@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Deduction -->
+        <record id="input_type_deduction" model="hr.payslip.input.type">
+            <field name="name">Deduction</field>
+            <field name="code">DEDUCTION</field>
+            <field name="country_id" ref="base.mm"/>
+            <field name="struct_ids" eval="[(4, ref('gulf_petrol_payroll.gpm_structure'))]"/>
+        </record>
+
+        <!-- Hardship -->
+        <record id="input_type_hardship" model="hr.payslip.input.type">
+            <field name="name">Hardship</field>
+            <field name="code">HARDSHIP</field>
+            <field name="country_id" ref="base.mm"/>
+            <field name="struct_ids" eval="[(4, ref('gulf_petrol_payroll.gpm_structure'))]"/>
+        </record>
+
+        <!-- Skill -->
+        <record id="input_type_skill" model="hr.payslip.input.type">
+            <field name="name">Skill</field>
+            <field name="code">SKILL</field>
+            <field name="country_id" ref="base.mm"/>
+            <field name="struct_ids" eval="[(4, ref('gulf_petrol_payroll.gpm_structure'))]"/>
+        </record>
+
+        <!-- Transportation -->
+        <record id="input_type_transportation" model="hr.payslip.input.type">
+            <field name="name">Transportation Allowance</field>
+            <field name="code">TRANSPORTATION</field>
+            <field name="country_id" ref="base.mm"/>
+            <field name="struct_ids" eval="[(4, ref('gulf_petrol_payroll.gpm_structure'))]"/>
+        </record>
+
+        <!-- Extra Working Day -->
+        <record id="input_type_extra_working" model="hr.payslip.input.type">
+            <field name="name">Extra Working Day</field>
+            <field name="code">EXTRA_WORKING</field>
+            <field name="country_id" ref="base.mm"/>
+            <field name="struct_ids" eval="[(4, ref('gulf_petrol_payroll.gpm_structure'))]"/>
+        </record>
+
+        <!-- Hardship OT Allowance -->
+        <record id="input_type_hardship_ot" model="hr.payslip.input.type">
+            <field name="name">Hardship OT Allowance</field>
+            <field name="code">HARDSHIP_OT</field>
+            <field name="country_id" ref="base.mm"/>
+            <field name="struct_ids" eval="[(4, ref('gulf_petrol_payroll.gpm_structure'))]"/>
+        </record>
+
+        <!-- Training Allowance -->
+        <record id="input_type_training_allowance" model="hr.payslip.input.type">
+            <field name="name">Training Allowance</field>
+            <field name="code">TRAINING_ALLOWANCE</field>
+            <field name="country_id" ref="base.mm"/>
+            <field name="struct_ids" eval="[(4, ref('gulf_petrol_payroll.gpm_structure'))]"/>
+        </record>
+
+        <!-- Travelling Allowance -->
+        <record id="input_type_travelling_allowance" model="hr.payslip.input.type">
+            <field name="name">Travelling Allowance</field>
+            <field name="code">TRAVELLING_ALLOWANCE</field>
+            <field name="country_id" ref="base.mm"/>
+            <field name="struct_ids" eval="[(4, ref('gulf_petrol_payroll.gpm_structure'))]"/>
+        </record>
+
+        <!-- Idle Day Allowance -->
+        <record id="input_type_idle_day_allowance" model="hr.payslip.input.type">
+            <field name="name">Idle Day Allowance</field>
+            <field name="code">IDLE_DAY_ALLOWANCE</field>
+            <field name="country_id" ref="base.mm"/>
+            <field name="struct_ids" eval="[(4, ref('gulf_petrol_payroll.gpm_structure'))]"/>
+        </record>
+
+        <!-- Public Holiday Allowance -->
+        <record id="input_type_public_holiday_allowance" model="hr.payslip.input.type">
+            <field name="name">Public Holiday Allowance</field>
+            <field name="code">PUBLIC_HOLIDAY_ALLOWANCE</field>
+            <field name="country_id" ref="base.mm"/>
+            <field name="struct_ids" eval="[(4, ref('gulf_petrol_payroll.gpm_structure'))]"/>
+        </record>
+
+    </data>
+</odoo>

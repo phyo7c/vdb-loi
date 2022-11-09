@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="hr_employee_inherit_ssb_form_view" model="ir.ui.view">
+			<field name="name">hr.employee.form.ssb.inherit</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//group[@name='has_work_permit']" position="after">
+					<group string="Previous Tax Information" colspan="2">
+						<field name="tax_exemption_spouse"/>
+						<field name="father_name"/>
+						<field name="tax_exemption_father"/>
+						<field name="mother_name"/>
+						<field name="tax_exemption_mother"/>
+						<field name="pre_income_total"/>
+						<field name="pre_tax_paid"/>
+						<field name="financial_year"/>
+					</group>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</odoo>

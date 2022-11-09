@@ -1,0 +1,33 @@
+from odoo import api, fields, models, _
+
+class RawPayslip(models.Model):
+    _name = 'raw.payslip'
+
+    employee_id = fields.Char('Employee ID')
+    employee_name = fields.Char('Employee Name')
+    from_date = fields.Date('From Date')
+    to_date = fields.Date('To Date')
+    subarea_description = fields.Char('Pers. Subarea Description')
+    cost_centre = fields.Char('Cost Centre/Project')
+    currency = fields.Char('Currency')
+    rule1 = fields.Float('Rule 1')
+    rule2 = fields.Float('Rule 2')
+    rule3 = fields.Float('Rule 3')
+    rule4 = fields.Float('Rule 4')
+    rule5 = fields.Float('Rule 5')
+    rule6 = fields.Float('Rule 6')
+    rule7 = fields.Float('Rule 7')
+    rule8 = fields.Float('Rule 8')
+    rule9 = fields.Float('Rule 9')
+    rule10 = fields.Float('Rule 10')
+    rule11 = fields.Float('Rule 11')
+    rule12 = fields.Float('Rule 12')
+    rule13 = fields.Float('Rule 13')
+    rule14 = fields.Float('Rule 14')
+    rule15 = fields.Float('Rule 15')
+    rule16 = fields.Float('Rule 16')
+    rule17 = fields.Float('Rule 17')
+    rule18 = fields.Float('Rule 18')
+    rule19 = fields.Float('Rule 19')
+    rule20 = fields.Float('Rule 20')
+    imported = fields.Boolean(string='Imported', default=False, copy=False, readonly=True)

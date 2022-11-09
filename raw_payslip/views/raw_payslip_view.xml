@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<record model="ir.ui.view" id="view_raw_payslip_form">
+			<field name="name">raw.payslip.form</field>
+			<field name="model">raw.payslip</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Raw Payslip">
+					<sheet>
+						<group>
+							<group>
+								<field name="employee_id"/>
+								<field name="employee_name"/>
+								<field name="from_date"/>
+								<field name="to_date"/>
+								<field name="subarea_description"/>
+								<field name="cost_centre"/>
+								<field name="currency"/>
+								<field name="imported"/>
+							</group>
+						</group>
+						<group>
+							<group>
+								<field name="rule1"/>
+								<field name="rule2"/>
+								<field name="rule3"/>
+								<field name="rule4"/>
+								<field name="rule5"/>
+								<field name="rule6"/>
+								<field name="rule7"/>
+								<field name="rule8"/>
+								<field name="rule9"/>
+								<field name="rule10"/>
+							</group>
+							<group>
+								<field name="rule11"/>
+								<field name="rule12"/>
+								<field name="rule13"/>
+								<field name="rule14"/>
+								<field name="rule15"/>
+								<field name="rule16"/>
+								<field name="rule17"/>
+								<field name="rule18"/>
+								<field name="rule19"/>
+								<field name="rule20"/>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_raw_payslip_tree">
+			<field name="name">raw.payslip.tree</field>
+			<field name="model">raw.payslip</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Raw Payslip">
+					<field name="employee_id"/>
+					<field name="employee_name"/>
+					<field name="from_date"/>
+					<field name="to_date"/>
+					<field name="subarea_description"/>
+					<field name="cost_centre"/>
+					<field name="currency"/>
+					<field name="rule1"/>
+					<field name="rule2"/>
+					<field name="rule3"/>
+					<field name="rule4"/>
+					<field name="rule5"/>
+					<field name="rule6"/>
+					<field name="rule7"/>
+					<field name="rule8"/>
+					<field name="rule9"/>
+					<field name="rule10"/>
+					<field name="imported"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="open_view_raw_payslip">
+			<field name="name">Raw Payslip</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">raw.payslip</field>
+			<field name="view_mode">form,tree</field>
+			<field name="view_id" ref="view_raw_payslip_tree"/>
+		</record>
+
+		<menuitem id="menu_raw_payslip" name="Raw Payslip" parent="hr_payroll.menu_hr_payroll_payslips" action="open_view_raw_payslip"
+				  sequence="81"/>
+
+	</data>
+</odoo>

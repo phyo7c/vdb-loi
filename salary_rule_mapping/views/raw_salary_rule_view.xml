@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<record model="ir.ui.view" id="view_raw_salary_rule_form">
+			<field name="name">raw.salary.rule.form</field>
+			<field name="model">raw.salary.rule</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Raw Salary Rule">
+					<sheet>
+						<group>
+							<group>
+								<field name="name"/>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_raw_salary_rule_tree">
+			<field name="name">raw.salary.rule.tree</field>
+			<field name="model">raw.salary.rule</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Raw Salary Rule">
+					<field name="name"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="open_view_raw_salary_rule">
+			<field name="name">Raw Salary Rule</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">raw.salary.rule</field>
+			<field name="view_mode">form,tree</field>
+			<field name="view_id" ref="view_raw_salary_rule_tree"/>
+		</record>
+
+		<menuitem id="menu_raw_salary_rule" name="Raw Salary Rule" parent="hr_payroll.menu_hr_salary_configuration" action="open_view_raw_salary_rule"
+				  sequence="31"/>
+
+	</data>
+</odoo>

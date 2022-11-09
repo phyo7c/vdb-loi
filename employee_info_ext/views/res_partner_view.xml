@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="partner_customization_view_form_inherit" model="ir.ui.view">
+			<field name="name">res.partner.form.nrc</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='type']" position="before">
+					<label for="nrc_number" name="NRC Entry"/>
+					<div class="o_address_format">
+						<field name="nrc_region_code" style="width: 15%" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>/
+						<field name="nrc_prefix" style="width: 30%" domain="[('nrc_region', '=', nrc_region_code)]" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" />(
+						<field name="nrc_type" style="width: 15%" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" /> )
+						<field name="nrc_number" style="width: 25%" />
+					</div>
+					<field name="nrc" readonly="1"/>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="res_partner_view_tree_nrc" model="ir.ui.view">
+			<field name="name">res.partner.tree.nrc</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_tree" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='display_name']" position="after">
+					<field name="nrc"/>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="partner_nrc_search_view" model="ir.ui.view">
+            <field name="name">res.partner.nrc.search</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+				<field name="name" position="after">
+					<field name="nrc" filter_domain="[('nrc','ilike',self)]"/>
+				</field>
+            </field>
+        </record>
+	</data>
+</odoo>

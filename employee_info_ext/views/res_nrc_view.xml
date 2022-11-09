@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<menuitem id="menu_res_nrc" name="NIRC" parent="contacts.res_partner_menu_config" sequence="19"/>
+		<record model="ir.ui.view" id="view_res_nrc_type_form">
+			<field name="name">res.nrc.type.form</field>
+			<field name="model">res.nrc.prefix</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Type">
+					<sheet>
+						<group>
+							<group>
+								<field name="name"/>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_res_nrc_type_tree">
+			<field name="name">res.nrc.type.tree</field>
+			<field name="model">res.nrc.type</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Type">
+					<field name="name"/>
+				</tree>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="open_view_res_nrc_type">
+			<field name="name">Prefix</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">res.nrc.type</field>
+			<field name="view_mode">form,tree</field>
+			<field name="view_id" ref="view_res_nrc_type_tree"/>
+		</record>
+		<menuitem id="menu_res_nrc_type" name="Type" parent="menu_res_nrc" action="open_view_res_nrc_type"
+				  sequence="22"/>
+		<record model="ir.ui.view" id="view_res_nrc_prefix_form">
+			<field name="name">res.nrc.prefix.form</field>
+			<field name="model">res.nrc.prefix</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Prefix">
+					<sheet>
+						<group>
+							<group>
+								<field name="name"/>
+								<field name="nrc_region"/>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_res_nrc_prefix_tree">
+			<field name="name">res.nrc.prefix.tree</field>
+			<field name="model">res.nrc.prefix</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Prefix">
+					<field name="nrc_region"/>
+					<field name="name"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="open_view_res_nrc_prefix">
+			<field name="name">Prefix</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">res.nrc.prefix</field>
+			<field name="view_mode">form,tree</field>
+			<field name="view_id" ref="view_res_nrc_prefix_tree"/>
+		</record>
+		<menuitem id="menu_res_nrc_prefix" name="Prefix" parent="menu_res_nrc" action="open_view_res_nrc_prefix"
+				  sequence="21"/>
+
+		<record model="ir.ui.view" id="view_res_nrc_region_form">
+			<field name="name">res.nrc.region.form</field>
+			<field name="model">res.nrc.region</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Region">
+					<sheet>
+						<group>
+							<group>
+								<field name="name"/>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_res_nrc_region_tree">
+			<field name="name">res.nrc.region.tree</field>
+			<field name="model">res.nrc.region</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Region">
+					<field name="name"/>
+				</tree>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="open_view_res_nrc_region">
+			<field name="name">Region</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">res.nrc.region</field>
+			<field name="view_mode">form,tree</field>
+			<field name="view_id" ref="view_res_nrc_region_tree"/>
+		</record>
+		<menuitem id="menu_res_nrc_region" name="Region" parent="menu_res_nrc" action="open_view_res_nrc_region"
+				  sequence="20"/>
+
+	</data>
+</odoo>

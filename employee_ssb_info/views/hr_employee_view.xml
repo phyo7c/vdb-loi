@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="hr_employee_inherit_ssb_form_view" model="ir.ui.view">
+			<field name="name">hr.employee.form.ssb.inherit</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//group[@name='has_work_permit']" position="after">
+					<group string="SSB" colspan="2">
+						<field name="ssb_not_calculation"/>
+						<field name="over_60_ssb"/>
+						<field name="ssb_no"/>
+						<field name="ssb_issue_date"/>
+					</group>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</odoo>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<record model="ir.ui.view" id="view_salary_rule_mapping_form">
+			<field name="name">salary.rule.mapping.form</field>
+			<field name="model">salary.rule.mapping</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Salary Rule Mapping">
+					<sheet>
+						<group>
+							<group>
+								<field name="company_id"/>
+							</group>
+						</group>
+						<notebook>
+                            <page id="mapping_lines" name="mapping_lines" string="Mapping Lines">
+                                <field name="line_ids">
+                                    <tree editable="bottom" string="Mapping Lines">
+                                        <field name="raw_salary_rule_id"/>
+										<field name="salary_rule_id" invisible="1"/>
+										<field name="input_type_id"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_salary_rule_mapping_tree">
+			<field name="name">salary.rule.mapping.tree</field>
+			<field name="model">salary.rule.mapping</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Salary Rule Mapping">
+					<field name="company_id"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="open_view_salary_rule_mapping">
+			<field name="name">Salary Rule Mapping</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">salary.rule.mapping</field>
+			<field name="view_mode">form,tree</field>
+			<field name="view_id" ref="view_salary_rule_mapping_tree"/>
+		</record>
+
+		<menuitem id="menu_salary_rule_mapping" name="Salary Input Type Mapping" parent="hr_payroll.menu_hr_salary_configuration" action="open_view_salary_rule_mapping"
+				  sequence="32"/>
+
+	</data>
+</odoo>

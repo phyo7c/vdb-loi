@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="hr_employee_inherit_form_view" model="ir.ui.view">
+			<field name="name">hr.employee.form</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='identification_id']" position="after">
+					<label for="nrc_number" name="NRC Entry"/>
+					<div class="o_address_format">
+						<field name="nrc_region_code" style="width: 15%" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>/
+						<field name="nrc_prefix" style="width: 30%" domain="[('nrc_region', '=', nrc_region_code)]" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" />(
+						<field name="nrc_type" style="width: 15%" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" /> )
+						<field name="nrc_number" style="width: 25%" />
+					</div>
+					<field name="nrc" readonly="1" force_save="1"/>
+				</xpath>
+
+				<xpath expr="//field[@name='work_email']" position="after">
+					<field name="subarea_id"/>
+					<field name="cost_centre"/>
+				</xpath>
+				<xpath expr="//div[@name='div_km_home_work']" position="after">
+					<field name="employee_address"/>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="hr_employee_inherit_ssb_form_view_inherit" model="ir.ui.view">
+			<field name="name">hr.employee.form.ssb.inherit</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="employee_tax_dependent.hr_employee_inherit_ssb_form_view" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='financial_year']" position="after">
+					<field name="previous_tax_office" />
+				</xpath>
+			</field>
+		</record>
+	</data>
+</odoo>

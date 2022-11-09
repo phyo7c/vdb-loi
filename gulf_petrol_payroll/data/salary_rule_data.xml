@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Hardship -->
+        <record id="gpm_hardship" model="hr.salary.rule">
+            <field name="name">Hardship</field>
+            <field name="code">HARDSHIP</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="sequence" eval="2"/>
+            <field name="struct_id" ref="gulf_petrol_payroll.gpm_structure"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.HARDSHIP</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = inputs.HARDSHIP.amount
+result_name = inputs.HARDSHIP.name
+            </field>
+        </record>
+
+        <!-- Skill -->
+        <record id="gpm_skill" model="hr.salary.rule">
+            <field name="name">Skill</field>
+            <field name="code">SKILL</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="sequence" eval="3"/>
+            <field name="struct_id" ref="gulf_petrol_payroll.gpm_structure"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.SKILL</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = inputs.SKILL.amount
+result_name = inputs.SKILL.name
+            </field>
+        </record>
+
+        <!-- Transportation Allowance -->
+        <record id="gpm_transportation" model="hr.salary.rule">
+            <field name="name">Transportation Allowance</field>
+            <field name="code">TRANSPORTATION</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="sequence" eval="4"/>
+            <field name="struct_id" ref="gulf_petrol_payroll.gpm_structure"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.TRANSPORTATION</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = inputs.TRANSPORTATION.amount
+result_name = inputs.TRANSPORTATION.name
+            </field>
+        </record>
+
+        <!-- Extra Working Day -->
+        <record id="gpm_extra_working" model="hr.salary.rule">
+            <field name="name">Extra Working Day</field>
+            <field name="code">EXTRA_WORKING</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="sequence" eval="5"/>
+            <field name="struct_id" ref="gulf_petrol_payroll.gpm_structure"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.EXTRA_WORKING</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = inputs.EXTRA_WORKING.amount
+result_name = inputs.EXTRA_WORKING.name
+            </field>
+        </record>
+
+        <!-- Hardship OT Allowance -->
+        <record id="gpm_hardship_ot" model="hr.salary.rule">
+            <field name="name">Hardship OT Allowance</field>
+            <field name="code">HARDSHIP_OT</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="sequence" eval="6"/>
+            <field name="struct_id" ref="gulf_petrol_payroll.gpm_structure"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.HARDSHIP_OT</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = inputs.HARDSHIP_OT.amount
+result_name = inputs.HARDSHIP_OT.name
+            </field>
+        </record>
+
+        <!-- Hardship OT Allowance -->
+        <record id="gpm_hardship_ot" model="hr.salary.rule">
+            <field name="name">Hardship OT Allowance</field>
+            <field name="code">HARDSHIP_OT</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="sequence" eval="6"/>
+            <field name="struct_id" ref="gulf_petrol_payroll.gpm_structure"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.HARDSHIP_OT</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = inputs.HARDSHIP_OT.amount
+result_name = inputs.HARDSHIP_OT.name
+            </field>
+        </record>
+
+        <!-- Training Allowance -->
+        <record id="gpm_training_allowance" model="hr.salary.rule">
+            <field name="name">Training Allowance</field>
+            <field name="code">TRAINING_ALLOWANCE</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="sequence" eval="7"/>
+            <field name="struct_id" ref="gulf_petrol_payroll.gpm_structure"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.TRAINING_ALLOWANCE</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = inputs.TRAINING_ALLOWANCE.amount
+result_name = inputs.TRAINING_ALLOWANCE.name
+            </field>
+        </record>
+
+        <!-- Travelling Allowance -->
+        <record id="gpm_travelling_allowance" model="hr.salary.rule">
+            <field name="name">Travelling Allowance</field>
+            <field name="code">TRAVELLING_ALLOWANCE</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="sequence" eval="8"/>
+            <field name="struct_id" ref="gulf_petrol_payroll.gpm_structure"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.TRAVELLING_ALLOWANCE</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = inputs.TRAVELLING_ALLOWANCE.amount
+result_name = inputs.TRAVELLING_ALLOWANCE.name
+            </field>
+        </record>
+
+        <!-- Idle Day Allowance -->
+        <record id="gpm_idle_day_allowance" model="hr.salary.rule">
+            <field name="name">Idle Day Allowance</field>
+            <field name="code">IDLE_DAY_ALLOWANCE</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="sequence" eval="9"/>
+            <field name="struct_id" ref="gulf_petrol_payroll.gpm_structure"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.IDLE_DAY_ALLOWANCE</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = inputs.IDLE_DAY_ALLOWANCE.amount
+result_name = inputs.IDLE_DAY_ALLOWANCE.name
+            </field>
+        </record>
+
+        <!-- Public Holiday Allowance -->
+        <record id="gpm_public_holiday_allowance" model="hr.salary.rule">
+            <field name="name">Public Holiday Allowance</field>
+            <field name="code">PUBLIC_HOLIDAY_ALLOWANCE</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="sequence" eval="10"/>
+            <field name="struct_id" ref="gulf_petrol_payroll.gpm_structure"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.PUBLIC_HOLIDAY_ALLOWANCE</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = inputs.PUBLIC_HOLIDAY_ALLOWANCE.amount
+result_name = inputs.PUBLIC_HOLIDAY_ALLOWANCE.name
+            </field>
+        </record>
+
+        <!-- SSB -->
+        <record id="gpm_ssb" model="hr.salary.rule">
+            <field name="name">SSB</field>
+            <field name="code">SSB</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="sequence" eval="10"/>
+            <field name="struct_id" ref="gulf_petrol_payroll.gpm_structure"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = -contract.wage * 0.02
+if employee.ssb_not_calculate:
+    result = 0
+elif abs(result) > 6000:
+    result = -6000
+            </field>
+        </record>
+
+        <!-- Income Tax -->
+        <record id="gpm_income_tax" model="hr.salary.rule">
+            <field name="name">Income Tax</field>
+            <field name="code">PIT</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="sequence" eval="10"/>
+            <field name="struct_id" ref="gulf_petrol_payroll.gpm_structure"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = contract.wage * 0.10
+            </field>
+        </record>
+
+    </data>
+</odoo>

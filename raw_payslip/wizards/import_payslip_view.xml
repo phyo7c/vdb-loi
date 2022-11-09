@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="import_payslip_view" model="ir.ui.view">
+            <field name="name">Import to Payslip</field>
+            <field name="model">import.payslip</field>
+            <field name="arch" type="xml">
+                <form string="Import to Payslip">
+                    <group>
+                        <field name="imported"/>
+                    </group>
+                    <span class="o_form_label">All raw payslips will be imported to payslip. You won't be able to modify them afterwards.</span>
+                    <footer>
+                        <button string="Import to Payslip" name="import_payslip" type="object" default_focus="1" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_import_payslip" model="ir.actions.act_window">
+            <field name="name">Import to Payslip</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">import.payslip</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="import_payslip_view"/>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+            <field name="help">This wizard will import to payslip all raw payslips selected. Once raw payslips are imported, you can not update them anymore.</field>
+            <field name="binding_model_id" ref="raw_payslip.model_raw_payslip" />
+            <field name="binding_view_types">list</field>
+        </record>
+
+    </data>
+</odoo>

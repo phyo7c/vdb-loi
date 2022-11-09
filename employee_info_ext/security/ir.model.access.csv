@@ -1,0 +1,5 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+access_res_nrc_region,access_res_nrc_region,model_res_nrc_region,base.group_user,1,1,1,1
+access_res_nrc_prefix,access_res_nrc_prefix,model_res_nrc_prefix,base.group_user,1,1,1,1
+access_res_nrc_type,access_res_nrc_type,model_res_nrc_type,base.group_user,1,1,1,1
+access_hr_subarea,access_hr_subarea,model_hr_subarea,base.group_user,1,1,1,1
