@@ -23,6 +23,8 @@ class EmployeeNrc(models.Model):
     cost_centre = fields.Many2one('account.analytic.account', string='Cost Center')
     employee_address = fields.Char(string='Employee Address')
     previous_tax_office = fields.Char(string='Previous Tax Office')
+    joining_date = fields.Date(string='Joining Date',
+                               help="Employee joining date computed from the contract start date", store=True)
 
     @api.onchange('nrc_region_code')
     def _onchange_nrc_region_code(self):

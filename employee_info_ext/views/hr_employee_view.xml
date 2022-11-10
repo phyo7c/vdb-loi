@@ -24,6 +24,10 @@
 				<xpath expr="//div[@name='div_km_home_work']" position="after">
 					<field name="employee_address"/>
 				</xpath>
+				<xpath expr="//field[@name='first_contract_date']" position="after">
+					<field name="joining_date"/>
+				</xpath>
+
 			</field>
 		</record>
 
