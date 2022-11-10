@@ -1,20 +1,23 @@
 {
-    'name': 'HR Payroll Extension',
+    'name': 'HR Payroll Customization',
     'version': '1.0.0',
     'author': '7thcomputing',
     'license': 'AGPL-3',
-    'category': 'Payroll',
+    'category': 'Employee',
     'website': 'http://7thcomputing.com',
     'description': """
-HR Payroll Extension
+HR Payroll Customization
     """,
     'depends': ['base',
-                'hr_payroll',
-                'hr_contract_currency'
-                ],
+                'hr',
+                'hr_payroll', 'hr_contract',             
+                'account',
+                'account_accountant',
+                'mail'],
     'data': [
-            'views/hr_payroll_rule_view.xml',
-            'views/hr_payslip_view.xml',
+        'security/ir.model.access.csv',
+        'views/hr_payslip_views.xml',
+        'reports/report_payroll_wizard.xml',
     ],
     'installable': True,
     'auto_install': False,
