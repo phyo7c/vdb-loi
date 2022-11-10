@@ -16,6 +16,7 @@ HR Payroll Customization
                 'mail'],
     'data': [
         'security/ir.model.access.csv',
+        'data/hr_payroll_data.xml',
         'views/hr_payslip_views.xml',
         'reports/report_payroll_wizard.xml',
     ],
