@@ -14,8 +14,8 @@ class HRPaySlip(models.Model):
     @api.depends('employee_id', 'date_from', 'date_to')
     def _compute_previous_amount(self):
         for slip in self:
-            prev_income = 0  # slip.employee_id.salary_total
-            prev_tax_paid = 0  # slip.employee_id.tax_paid
+            prev_income = slip.employee_id.pre_income_total
+            prev_tax_paid = slip.employee_id.pre_tax_paid
             remaining_months = 0
             total_months = 12
             today = fields.Date.today()
