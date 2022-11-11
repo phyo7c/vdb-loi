@@ -26,6 +26,7 @@
 				</xpath>
 				<xpath expr="//field[@name='first_contract_date']" position="after">
 					<field name="joining_date"/>
+					<field name="resign_date"/>
 				</xpath>
 
 			</field>

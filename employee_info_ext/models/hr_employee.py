@@ -25,6 +25,8 @@ class EmployeeNrc(models.Model):
     previous_tax_office = fields.Char(string='Previous Tax Office')
     joining_date = fields.Date(string='Joining Date',
                                help="Employee joining date computed from the contract start date", store=True)
+    resign_date = fields.Date(string='Resign Date',
+                               help="Employee resign date", store=True)
 
     @api.onchange('nrc_region_code')
     def _onchange_nrc_region_code(self):
