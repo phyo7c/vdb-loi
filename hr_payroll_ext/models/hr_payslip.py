@@ -1,11 +1,72 @@
 from odoo import models, fields, api, _
-from datetime import date, datetime
+from datetime import date, datetime, time, timedelta
+from dateutil.relativedelta import relativedelta
 from odoo.tools import float_round, date_utils, convert_file, html2plaintext, is_html_empty, format_amount
 
 class HRPaySlip(models.Model):
     _inherit = 'hr.payslip'
 
     currency_rate = fields.Float('Currency Rate')
+    previous_income = fields.Float('Previous Income', compute='_compute_previous_amount', store=True)
+    previous_tax_paid = fields.Float('Previous Tax Paid', compute='_compute_previous_amount', store=True)
+    remaining_months = fields.Integer('Remaining Months', compute='_compute_previous_amount', store=True)
+
+    @api.depends('employee_id', 'date_from', 'date_to')
+    def _compute_previous_amount(self):
+        for slip in self:
+            prev_income = slip.employee_id.pre_income_total
+            prev_tax_paid = slip.employee_id.pre_tax_paid
+            remaining_months = 0
+            total_months = 12
+            today = fields.Date.today()
+            fiscal_year = self.env['account.fiscal.year'].search([('date_from', '<=', slip.date_to),
+                                                                  ('date_to', '>=', slip.date_to),
+                                                                  ('company_id', '=', slip.employee_id.company_id.id)])
+            print("_compute_previous_amount>>>", fiscal_year, slip.date_to)
+            if fiscal_year:
+                remaining_months = relativedelta(fiscal_year.date_to, slip.date_to).months
+                if slip.employee_id.joining_date and fiscal_year.date_from < slip.employee_id.joining_date < fiscal_year.date_to:
+                    prev_income = slip.employee_id.pre_income_total
+                    prev_tax_paid = slip.employee_id.pre_tax_paid
+                if slip.employee_id.joining_date and slip.employee_id.joining_date > fiscal_year.date_from:
+                    total_months = 12 - relativedelta(slip.employee_id.joining_date, fiscal_year.date_from).months
+                payslips = self.env['hr.payslip'].sudo().search([('employee_id', '=', slip.employee_id.id),
+                                                                 ('date_to', '>=', fiscal_year.date_from),
+                                                                 ('date_to', '<=', fiscal_year.date_to),
+                                                                 ('state', 'not in', ('draft', 'cancel'))])
+                for pay in payslips:
+                    slipline_obj = self.env['hr.payslip.line']
+                    basic = slipline_obj.sudo().search([('slip_id', '=', pay.id), ('code', '=', 'NET')])
+                    # deductions = slipline_obj.search([('slip_id', '=', pay.id), ('code', 'in', ('UNPAID', 'SSB'))])
+                    deductions = slipline_obj.sudo().search([('slip_id', '=', pay.id), ('code', '=', 'DEDUCTION')])
+                    tax_paid = slipline_obj.sudo().search([('slip_id', '=', pay.id), ('code', '=', 'PIT')])
+                    absents = slipline_obj.sudo().search([('slip_id', '=', pay.id), ('code', '=', 'ABSENCE')])
+                    prev_income += basic and basic.total or 0
+                    prev_income -= sum([abs(ded.total) for ded in deductions])
+                    prev_income -= sum([abs(dedabs.total) for dedabs in absents])
+                    prev_tax_paid += tax_paid and tax_paid.total or 0
+
+            #sunday_unpaid = self._get_sunday_list(slip.employee_id, slip.date_from, slip.date_to)
+            slip.remaining_months = remaining_months
+            slip.previous_income = prev_income
+            slip.previous_tax_paid = prev_tax_paid
+            #slip.total_months = total_months
+            #slip.sunday_unpaid = 0  # sunday_unpaid
+            #slip.half_month_day = 0
+            if slip.employee_id.joining_date and (
+                    datetime.strptime(str(slip.employee_id.joining_date), '%Y-%m-%d').strftime(
+                        "%Y-%m") == datetime.strptime(str(slip.date_from), '%Y-%m-%d').strftime("%Y-%m")):
+                delta = slip.date_to - slip.employee_id.joining_date
+                slip.half_month_day = delta.days + 1
+            elif slip.employee_id.resign_date and (
+                    datetime.strptime(str(slip.employee_id.resign_date), '%Y-%m-%d').strftime(
+                        "%Y-%m") == datetime.strptime(str(slip.date_from), '%Y-%m-%d').strftime("%Y-%m")):
+                delta = slip.employee_id.resign_date - slip.date_from
+                #slip.half_month_day = delta.days + 1
+                remaining_months = relativedelta(slip.date_to, slip.employee_id.resign_date).months
+                slip.total_months = relativedelta(slip.date_to, fiscal_year.date_from).months
+                slip.remaining_months = remaining_months
+                
 
     def _get_payslip_lines(self):
         line_vals = []
