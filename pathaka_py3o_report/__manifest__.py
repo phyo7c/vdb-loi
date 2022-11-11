@@ -10,7 +10,6 @@
     'description': """
 PaThaKha Py3o Report
 ===================
-
 This module adds a sample py3o invoice report.
 
 This module has been written by Alexis de Lattre from Akretion
