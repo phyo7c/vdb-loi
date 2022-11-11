@@ -1,5 +1,6 @@
 from odoo import models, fields, api, _
-from datetime import date, datetime
+from datetime import date, datetime, time, timedelta
+from dateutil.relativedelta import relativedelta
 from odoo.tools import float_round, date_utils, convert_file, html2plaintext, is_html_empty, format_amount
 
 class HRPaySlip(models.Model):
