@@ -52,7 +52,7 @@ class HRPaySlip(models.Model):
             slip.previous_tax_paid = prev_tax_paid
             #slip.total_months = total_months
             #slip.sunday_unpaid = 0  # sunday_unpaid
-            slip.half_month_day = 0
+            #slip.half_month_day = 0
             if slip.employee_id.joining_date and (
                     datetime.strptime(str(slip.employee_id.joining_date), '%Y-%m-%d').strftime(
                         "%Y-%m") == datetime.strptime(str(slip.date_from), '%Y-%m-%d').strftime("%Y-%m")):
