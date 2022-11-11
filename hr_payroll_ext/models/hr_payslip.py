@@ -26,8 +26,8 @@ class HRPaySlip(models.Model):
             if fiscal_year:
                 remaining_months = relativedelta(fiscal_year.date_to, slip.date_to).months
                 if slip.employee_id.joining_date and fiscal_year.date_from < slip.employee_id.joining_date < fiscal_year.date_to:
-                    prev_income = slip.employee_id.salary_total
-                    prev_tax_paid = slip.employee_id.tax_paid
+                    prev_income = slip.employee_id.pre_income_total
+                    prev_tax_paid = slip.employee_id.pre_tax_paid
                 if slip.employee_id.joining_date and slip.employee_id.joining_date > fiscal_year.date_from:
                     total_months = 12 - relativedelta(slip.employee_id.joining_date, fiscal_year.date_from).months
                 payslips = self.env['hr.payslip'].sudo().search([('employee_id', '=', slip.employee_id.id),
