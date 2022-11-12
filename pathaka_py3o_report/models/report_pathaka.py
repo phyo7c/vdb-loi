@@ -9,7 +9,7 @@ class AccountMove(models.Model):
     _inherit = "hr.employee"
 
     def _get_payslip(self,month):
-        payslip_ids = self.env['hr.payslip'].search([('id','=',self.id)])
+        payslip_ids = self.env['hr.payslip'].search([('employee_id','=',self.id)])
         for payslip_id in payslip_ids:
             m = payslip_id.date_from.month
             if m > 0 and m == month:
@@ -21,7 +21,7 @@ class AccountMove(models.Model):
                 return 0.0
 
     def _get_payslip2(self,month):
-        payslip_ids = self.env['hr.payslip'].search([('id','=',self.id)])
+        payslip_ids = self.env['hr.payslip'].search([('employee_id','=',self.id)])
         for payslip_id in payslip_ids:
             m = payslip_id.date_from.month
             if m > 0 and m == month:
