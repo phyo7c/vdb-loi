@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_hr_employee_tax_report" model="ir.ui.view">
+        <field name="name">hr.employee.tax.report.form</field>
+        <field name="model">hr.employee.tax.report</field>
+        <field name="arch" type="xml">
+            <form string="Income Tax Report">
+                <group>
+                    <group>
+                        <field name="fiscal_year_id"/>
+                    </group>
+                    <group></group>
+                </group>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_employee_tax_report" model="ir.actions.act_window">
+        <field name="name">Income Tax Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.employee.tax.report</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="hr.model_hr_employee" />
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>
