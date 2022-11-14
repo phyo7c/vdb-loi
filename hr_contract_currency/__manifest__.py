@@ -6,7 +6,6 @@
     'category': 'hr_contract',
     'website': 'http://7thcomputing.com',
     'description': """
-
 HR Contract Currency
     """,
     'depends': ['base',
