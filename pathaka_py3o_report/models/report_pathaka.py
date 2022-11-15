@@ -3,24 +3,30 @@ import json
 import math
 from num2words import num2words
 from odoo.exceptions import UserError
+import locale
 
 
 class AccountMove(models.Model):
     _inherit = "hr.employee"
 
-    def _get_payslip(self,month):
+    def _get_payslip(self,month,decimal: int = 2):
         payslip_ids = self.env['hr.payslip'].search([('employee_id','=',self.id)])
         for payslip_id in payslip_ids:
             m = payslip_id.date_from.month
+            total = 0
             if m > 0 and m == month:
                 for line_id in payslip_id.line_ids:
                     if line_id.code == 'NET':
-                        total = line_id.total
-                        total = f"{int(total):,}"
+                        total = round(line_id.total, 2)
+                        total = f"{total:,}"
+                        split_num = total.split(".")
+                        if len(split_num) >= 2:
+                            if len(split_num[1]) == 1:
+                                total = total+'0'
                         return total
                         break
             else:
-                return 0.0
+                return 0.00
 
     def _get_payslip_internal(self,month):
         payslip_ids = self.env['hr.payslip'].search([('employee_id','=',self.id)])
@@ -32,7 +38,7 @@ class AccountMove(models.Model):
                         return line_id.total
                         break
             else:
-                return 0.0
+                return 0.00
 
     def _get_payslip2(self,month):
         payslip_ids = self.env['hr.payslip'].search([('employee_id','=',self.id)])
@@ -41,12 +47,16 @@ class AccountMove(models.Model):
             if m > 0 and m == month:
                 for line_id in payslip_id.line_ids:
                     if line_id.code == 'PIT':
-                        total = line_id.total
-                        total = f"{int(total):,}"
+                        total = round(line_id.total, 2)
+                        total = f"{total:,}"
+                        split_num = total.split(".")
+                        if len(split_num) >= 2:
+                            if len(split_num[1]) == 1:
+                                total = total + '0'
                         return total
                         break
             else:
-                return 0.0
+                return 0.00
 
     def _get_payslip2_internal(self,month):
         payslip_ids = self.env['hr.payslip'].search([('employee_id','=',self.id)])
@@ -58,21 +68,31 @@ class AccountMove(models.Model):
                         return line_id.total
                         break
             else:
-                return 0.0
+                return 0.00
 
 
     def _get_total(self):
         total = 0
         for x in range(1, 13):
             total += self._get_payslip_internal(x)
-        total = f"{int(total):,}"
+        total = round(total, 2)
+        total = f"{total:,}"
+        split_num = total.split(".")
+        if len(split_num) >= 2:
+            if len(split_num[1]) == 1:
+                total = total + '0'
         return total
 
     def _get_total2(self):
         total = 0
         for x in range(1, 13):
             total += self._get_payslip2_internal(x)
-        total = f"{int(total):,}"
+        total = round(total, 2)
+        total = f"{total:,}"
+        split_num = total.split(".")
+        if len(split_num) >= 2:
+            if len(split_num[1]) == 1:
+                total = total + '0'
         return total
 
 
