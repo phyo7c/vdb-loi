@@ -53,7 +53,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <t t-foreach="doc.get_income_tax_lines(doc,info['fiscal_year_id'])" t-as="line">
+                                <t t-foreach="doc.get_net_salary_lines(doc,info['fiscal_year_id'])" t-as="line">
                                     <tr>
                                         <td align="right"><t t-esc="line['type_of_income']"/></td>
                                         <td align="right">
@@ -217,7 +217,34 @@
                                         <span t-esc="'{0:,.0f}'.format(twenty_five_percent_rate['amount']*0.25)"/>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td colspan="4" align="right">Total Payable PIT for FY <t t-esc="info['fiscal_year']"/> (<t t-esc="info['start_month']"/> <t t-esc="info['start_year']"/> to <t t-esc="info['end_month']"/> <t t-esc="info['end_year']"/>)</td>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(zero_percent_rate['amount']+five_percent_rate['amount']+ten_percent_rate['amount']+fifteen_percent_rate['amount']+twenty_percent_rate['amount']+twenty_five_percent_rate['amount'])"/></td>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(zero_percent_rate['amount']*0+five_percent_rate['amount']*0.05+ten_percent_rate['amount']*0.10+fifteen_percent_rate['amount']*0.15+twenty_percent_rate['amount']*0.20+twenty_five_percent_rate['amount']*0.25)"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" align="right">Annual Personal Income Tax ("PIT") MMK</td>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(zero_percent_rate['amount']*0+five_percent_rate['amount']*0.05+ten_percent_rate['amount']*0.10+fifteen_percent_rate['amount']*0.15+twenty_percent_rate['amount']*0.20+twenty_five_percent_rate['amount']*0.25)"/></td>
+                                </tr>
                             </tbody>
+                        </table>
+                        <t t-set="total_income_tax" t-value="0"/>
+                        <table class="table table-bordered mb32">
+                            <tr>
+                                <td colspan="2" align="right">Balance</td>
+                            </tr>
+                            <t t-foreach="doc.get_income_tax_lines(doc,info['fiscal_year_id'])" t-as="line">
+                                <tr>
+                                    <td align="right"><t t-esc="line['name']"/></td>
+                                    <td align="right">
+                                        <t t-esc="'{0:,.2f}'.format(line['amount'])"/>
+                                        <t t-set="total_income_tax" t-value="total_income_tax+line['amount']"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td colspan="2" align="right"><t t-esc="'{0:,.2f}'.format(total_income_tax)"/></td>
+                            </tr>
                         </table>
                     </t>
                 </div>

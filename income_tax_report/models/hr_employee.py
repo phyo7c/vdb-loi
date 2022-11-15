@@ -3,7 +3,7 @@ from odoo import fields, models, tools, api, _
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    def get_income_tax_lines(self, employee, fiscal_year_id):
+    def get_net_salary_lines(self, employee, fiscal_year_id):
         employees = self.env['hr.employee'].browse(employee.id)
         fiscal_year = self.env['account.fiscal.year'].browse(fiscal_year_id)
         for emp in employees:
@@ -157,3 +157,58 @@ class HrEmployee(models.Model):
         return {
             "amount": amount,
         }
+
+    def get_prev_income_tax(self, employee, fiscal_year_id):
+        amount = 0
+        fiscal_year = self.env['account.fiscal.year'].browse(fiscal_year_id)
+        if employee.financial_year and employee.financial_year.id == fiscal_year.id:
+            amount = employee.prev_tax_paid
+        return {
+            "amount": amount,
+        }
+
+    def get_income_tax_lines(self, employee, fiscal_year_id):
+        employees = self.env['hr.employee'].browse(employee.id)
+        fiscal_year = self.env['account.fiscal.year'].browse(fiscal_year_id)
+        for emp in employees:
+            res = []
+            last_income_tax = 0
+            previous_tax_paid = 0.00
+            if emp.financial_year and emp.financial_year.id == fiscal_year.id:
+                previous_tax_paid = emp.pre_tax_paid
+            res.append({"name": "Previous Income Tax",
+                        "amount": previous_tax_paid,
+                        })
+            self.env.cr.execute(
+                """select *,concat(month_name,' ',year_name,' Income Tax') full_name
+                from
+                (
+                    select *,TO_CHAR(
+                        TO_DATE (date_part('month',from_date)::text, 'MM'), 'Mon'
+                        ) AS month_name,date_part('year', from_date) AS year_name
+                    from 
+                    (
+                        select generate_series(date_from,date_to, '1 month'::interval)::date from_date,
+                        (date_trunc('month', generate_series(date_from,date_to, '1 month'::interval)::date) + interval '1 month' - interval '1 day')::date to_date
+                        from account_fiscal_year 
+                        where id=%s
+                    )A
+                )B;""",
+                (fiscal_year.id,))
+            generated_months = self.env.cr.fetchall()
+            currency_rate = 0
+            if generated_months:
+                for month in generated_months:
+                    payslip = self.env['hr.payslip'].search([('date_from', '=', month[0]),('date_to', '=', month[1]),('employee_id', '=', emp.id)],limit=1)
+                    if payslip:
+                        salary_rule = self.env['hr.salary.rule'].search([('code', '=', 'PIT')])
+                        payslip_line = self.env['hr.payslip.line'].search([('slip_id', '=', payslip.id),('salary_rule_id', '=', salary_rule.id)])
+                        if payslip_line:
+                            income_tax = payslip_line.total
+                            last_income_tax = payslip_line.total
+                    else:
+                        income_tax = last_income_tax
+                    res.append({"name": month[4],
+                                "amount": income_tax,
+                                })
+        return res

@@ -14,9 +14,25 @@ class HrEmployeeIncomeTaxReport(models.AbstractModel):
     _description = 'Income Tax Report'
 
     def _get_header_info(self, fiscal_year_id):
+        self.env.cr.execute("""select date_part('year',date_from)::text start_year,
+                            date_part('year',date_to)::text end_year,
+                            TO_CHAR(TO_DATE (date_part('month',date_from)::text, 'MM'), 'Month') AS start_month,
+                            TO_CHAR(TO_DATE (date_part('month',date_to)::text, 'MM'), 'Month') AS end_month
+                            from account_fiscal_year
+                            where id=%s;""", (fiscal_year_id[0],))
+        record = self.env.cr.fetchall()
+        if record:
+            start_year = record[0][0]
+            end_year = record[0][1]
+            start_month = record[0][2]
+            end_month = record[0][3]
         return {
             'fiscal_year': fiscal_year_id[1],
             'fiscal_year_id': fiscal_year_id[0],
+            'start_year': start_year,
+            'end_year': end_year,
+            'start_month': start_month,
+            'end_month': end_month,
         }
 
     @api.model
