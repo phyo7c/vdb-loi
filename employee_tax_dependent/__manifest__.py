@@ -6,7 +6,6 @@
     'category': 'Employee',
     'website': 'http://7thcomputing.com',
     'description': """
-
 Employee Tax Dependent
     """,
     'depends': ['base',
