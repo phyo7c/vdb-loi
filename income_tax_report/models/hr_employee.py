@@ -9,14 +9,14 @@ class HrEmployee(models.Model):
         for emp in employees:
             res = []
             last_salary = 0
-            previous_tax_paid = 0.00
+            previous_income_total = 0.00
             if emp.financial_year and emp.financial_year.id == fiscal_year.id:
-                previous_tax_paid = emp.pre_tax_paid
+                previous_income_total = emp.pre_income_total
             res.append({"type_of_income": "Previous Net Salary",
                         "net_salary": 0,
                         "months": 1.00,
                         "exchange_rate": 0.00,
-                        "mmk": previous_tax_paid,
+                        "mmk": previous_income_total,
                         })
             self.env.cr.execute(
                 """select *,concat(month_name,' ',year_name,' Net Salary') full_name
@@ -35,17 +35,14 @@ class HrEmployee(models.Model):
                 )B;""",
                 (fiscal_year.id,))
             generated_months = self.env.cr.fetchall()
-            currency_rate = 1850
+            currency_rate = 0
             if generated_months:
                 for month in generated_months:
-                    payslip = self.env['hr.payslip'].search([('date_from', '=', month[0]),('date_to', '=', month[1]),('employee_id', '=', emp.id),('state', 'in', ('done','paid'))],limit=1)
+                    payslip = self.env['hr.payslip'].search([('date_from', '=', month[0]),('date_to', '=', month[1]),('employee_id', '=', emp.id)],limit=1)
                     if payslip:
                         currency_rate = payslip.currency_rate
-                        salary_rule = self.env['hr.salary.rule'].search([('code', '=', 'PIT')])
-                        payslip_line = self.env['hr.payslip.line'].search([('slip_id', '=', payslip.id),('salary_rule_id', '=', salary_rule.id)])
-                        if payslip_line:
-                            net_salary = payslip_line.total
-                            last_salary = payslip_line.total
+                        net_salary = payslip.salary
+                        last_salary = payslip.salary
                     else:
                         net_salary = last_salary
                     res.append({"type_of_income": month[4],
