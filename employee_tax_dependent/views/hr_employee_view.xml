@@ -13,9 +13,11 @@
 						<field name="tax_exemption_father"/>
 						<field name="mother_name"/>
 						<field name="tax_exemption_mother"/>
+						<field name="insurance_amt"/>
 						<field name="pre_income_total"/>
 						<field name="pre_tax_paid"/>
 						<field name="financial_year"/>
+
 					</group>
 				</xpath>
 			</field>

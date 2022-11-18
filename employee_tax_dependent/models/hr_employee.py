@@ -12,3 +12,5 @@ class HrEmployee(models.Model):
     pre_income_total = fields.Float('Previous Income Total')
     pre_tax_paid = fields.Float('Previous Tax Paid')
     financial_year = fields.Many2one('account.fiscal.year', string='Financial Year')
+    insurance_amt = fields.Float(string='Insurance Amount')
+
