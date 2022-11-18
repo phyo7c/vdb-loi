@@ -24,7 +24,7 @@ class AccountMove(models.Model):
                             if len(split_num[1]) == 1:
                                 total = total+'0'
                         return total
-                        break
+
             else:
                 return 0.00
 
@@ -36,7 +36,7 @@ class AccountMove(models.Model):
                 for line_id in payslip_id.line_ids:
                     if line_id.code == 'NET':
                         return line_id.total
-                        break
+
             else:
                 return 0.00
 
@@ -54,7 +54,7 @@ class AccountMove(models.Model):
                             if len(split_num[1]) == 1:
                                 total = total + '0'
                         return total
-                        break
+
             else:
                 return 0.00
 
@@ -66,7 +66,7 @@ class AccountMove(models.Model):
                 for line_id in payslip_id.line_ids:
                     if line_id.code == 'PIT':
                         return line_id.total
-                        break
+
             else:
                 return 0.00
 
@@ -114,17 +114,14 @@ class AccountMove(models.Model):
         payslip_ids = self.env['hr.payslip'].search([('employee_id','=',self.id)])
         for payslip_id in payslip_ids:
             m = payslip_id.date_from.month
-            if m > 0 and m == 5:
+            if m > 0:
                 for line_id in payslip_id.line_ids:
-                    if line_id.code == 'PIT':
+                    if line_id.code == '20P':
                         total = round(line_id.total, 2)
                         total = f"{total:,}"
-                        split_num = total.split(".")
-                        if len(split_num) >= 2:
-                            if len(split_num[1]) == 1:
-                                total = total + '0'
                         return total
-                        break
+
             else:
                 return 0.00
+
 
