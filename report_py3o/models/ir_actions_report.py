@@ -7,6 +7,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import find_in_path
 from odoo.tools.safe_eval import safe_eval, time
+import platform
 
 logger = logging.getLogger(__name__)
 
@@ -105,10 +106,14 @@ class IrActionsReport(models.Model):
 
     @api.model
     def _get_lo_bin(self):
+        if platform.system() == 'Windows':
+            parameter = "soffice"
+        else:
+            parameter = "libreoffice"
         lo_bin = (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param(PY3O_CONVERSION_COMMAND_PARAMETER, "libreoffice")
+            .get_param(PY3O_CONVERSION_COMMAND_PARAMETER, parameter)
         )
         try:
             lo_bin = find_in_path(lo_bin)

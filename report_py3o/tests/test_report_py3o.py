@@ -23,6 +23,7 @@ from odoo.addons.base.tests.test_mimetypes import PNG
 from ..models._py3o_parser_context import format_multiline_value
 from ..models.ir_actions_report import PY3O_CONVERSION_COMMAND_PARAMETER
 from ..models.py3o_report import TemplateNotFound
+import platform
 
 logger = logging.getLogger(__name__)
 
@@ -252,8 +253,12 @@ class TestReportPy3o(TransactionCase):
             self.report._render(self.env.user.ids)
 
         # if we reset the wrong path, everything should work
+        if platform.system() == 'Windows':
+            parameter = "soffice"
+        else:
+            parameter = "libreoffice"
         self.env["ir.config_parameter"].set_param(
-            PY3O_CONVERSION_COMMAND_PARAMETER, "libreoffice"
+            PY3O_CONVERSION_COMMAND_PARAMETER, "soffice"
         )
         self.report.refresh()
         self.assertTrue(self.report.lo_bin_path)

@@ -12,6 +12,7 @@ from base64 import b64decode
 from contextlib import closing
 from io import BytesIO
 from zipfile import ZIP_DEFLATED, ZipFile
+import platform
 
 import pkg_resources
 
@@ -238,12 +239,19 @@ class Py3oReport(models.TransientModel):
                     user_installation=tmp_user_installation,
                 )
                 logger.debug("Running command %s", command)
+                if platform.system() == 'Windows':
+                    command = self._check_space_in_word(command)
+                    shell_state = True
+                else:
+                    shell_state = False
                 output = subprocess.check_output(
-                    command, cwd=os.path.dirname(result_path)
+                    command, cwd=os.path.dirname(result_path), shell=shell_state
                 )
                 logger.debug("Output was %s", output)
                 self._cleanup_tempfiles([result_path])
                 result_path, result_filename = os.path.split(result_path)
+                if platform.system() == 'Windows':
+                    result_path = os.path.dirname(self.ir_actions_report_id.lo_bin_path)
                 result_path = os.path.join(
                     result_path,
                     "%s.%s"
@@ -253,6 +261,26 @@ class Py3oReport(models.TransientModel):
                     ),
                 )
         return result_path
+
+    def _check_space_in_word(self, commands):
+        commander = ''
+        for command in commands:
+            filepath = ''
+            if ' ' in command:
+                for path in command.split('\\'):
+                    if ' ' in path:
+                        path = '"' + path + '"'
+                    if filepath:
+                        filepath += '\\' + path
+                    else:
+                        filepath = path
+            else:
+                filepath = command
+            if commander:
+                commander += ' ' + filepath
+            else:
+                commander = filepath
+        return commander
 
     def _convert_single_report_cmd(
         self, result_path, model_instance, data, user_installation=None

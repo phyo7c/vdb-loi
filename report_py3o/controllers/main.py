@@ -21,8 +21,7 @@ class ReportController(main.ReportController):
                 reportname=reportname, docids=docids, converter=converter, **data
             )
         context = dict(request.env.context)
-       
-        
+
         if docids:
             docids = [int(i) for i in docids.split(",")]
         if data.get("options"):
@@ -37,8 +36,6 @@ class ReportController(main.ReportController):
             context.update(data["context"])
 
         ir_action = request.env["ir.actions.report"]
-        # if context.get('allowed_company_ids'):
-        #     context.pop("allowed_company_ids")
         action_py3o_report = ir_action.get_from_report_name(
             reportname, "py3o"
         ).with_context(context)
@@ -71,7 +68,7 @@ class ReportController(main.ReportController):
         requestcontent = json.loads(data)
         url, report_type = requestcontent[0], requestcontent[1]
         if "py3o" not in report_type:
-            return super(ReportController, self).report_download(data, context=None)
+            return super(ReportController, self).report_download(data, token)
         try:
             reportname = url.split("/report/py3o/")[1].split("?")[0]
             docids = None
