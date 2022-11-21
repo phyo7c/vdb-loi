@@ -8,6 +8,7 @@ from odoo.addons.report_py3o.models.ir_actions_report import (
     PY3O_CONVERSION_COMMAND_PARAMETER,
 )
 from odoo.addons.report_py3o.tests import test_report_py3o
+import platform
 
 
 @mock.patch(
@@ -86,8 +87,12 @@ class TestReportPy3oFusionServer(test_report_py3o.TestReportPy3o):
         self.assertTrue(self.report.msg_py3o_report_not_available)
 
         # if we set a libreffice runtime, the report is available again
+        if platform.system() == 'Windows':
+            parameter = "soffice"
+        else:
+            parameter = "libreoffice"
         self.env["ir.config_parameter"].set_param(
-            PY3O_CONVERSION_COMMAND_PARAMETER, "libreoffice"
+            PY3O_CONVERSION_COMMAND_PARAMETER, parameter
         )
         self.report.refresh()
         self.assertTrue(self.report.lo_bin_path)
