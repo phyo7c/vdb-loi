@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            id="action_report_pathaka"
+            string="PaThaKha Report"
+            model="hr.employee"
+            report_type="qweb-pdf"
+            file="pathakha_py3o_report.report_pathakha_print"
+            name="pathakha_py3o_report.report_pathakha_print"
+            print_report_name="'PaThaKha Report'"
+        />
+    </data>
+</odoo>

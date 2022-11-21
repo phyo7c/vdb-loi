@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pathaka_py3o_report.action_report_pathaka" model="ir.actions.report">
+        <field name="report_type">py3o</field>
+        <field name="py3o_filetype">pdf</field>
+        <field name="module">pathaka_py3o_report</field>
+        <field name="py3o_template_fallback">pathaka_report.odt</field>
+    </record>
+</odoo>
