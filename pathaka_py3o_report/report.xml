@@ -4,6 +4,6 @@
         <field name="report_type">py3o</field>
         <field name="py3o_filetype">pdf</field>
         <field name="module">pathaka_py3o_report</field>
-        <field name="py3o_template_fallback">pathaka_report.odt</field>
+        <field name="py3o_template_fallback">test_report.odt</field>
     </record>
 </odoo>

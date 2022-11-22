@@ -13,21 +13,16 @@ PaThaKha Py3o Report
 
 This module adds a sample py3o invoice report.
 
-This module has been written by 7th Computing
-<info@7thcomputing.com>.
+This module has been written by Alexis de Lattre from Akretion
+<alexis.delattre@akretion.com>.
     """,
-    'author': '7th Computing',
+    'author': 'Akretion',
     'depends': [
         'report_py3o_fusion_server','hr','account'],
     'data': [
         'views/report_pathaka.xml',
         'report.xml',
     ],
-    'assets': {
-        'web.report_assets_common': [
-            'pathaka_py3o_report/static/src/scss/report_pathaka.scss',
-        ],
-    },
     'installable': True,
 }
 
