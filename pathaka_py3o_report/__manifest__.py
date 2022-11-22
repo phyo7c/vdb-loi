@@ -23,6 +23,11 @@ This module has been written by 7th Computing
         'views/report_pathaka.xml',
         'report.xml',
     ],
+    'assets': {
+        'web.report_assets_common': [
+            'pathaka_py3o_report/static/src/scss/report_pathaka.scss',
+        ],
+    },
     'installable': True,
 }
 
