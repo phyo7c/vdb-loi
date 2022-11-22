@@ -27,6 +27,7 @@ class AccountMove(models.Model):
                         break
             else:
                 return 0.00
+        return 0.00
 
     def _get_payslip_internal(self,month):
         payslip_ids = self.env['hr.payslip'].search([('employee_id','=',self.id)])
@@ -39,6 +40,7 @@ class AccountMove(models.Model):
                         break
             else:
                 return 0.00
+        return 0.00
 
     def _get_payslip2(self,month):
         payslip_ids = self.env['hr.payslip'].search([('employee_id','=',self.id)])
@@ -57,6 +59,7 @@ class AccountMove(models.Model):
                         break
             else:
                 return 0.00
+        return 0.00
 
     def _get_payslip2_internal(self,month):
         payslip_ids = self.env['hr.payslip'].search([('employee_id','=',self.id)])
@@ -69,7 +72,7 @@ class AccountMove(models.Model):
                         break
             else:
                 return 0.00
-
+        return 0.00
 
     def _get_total(self):
         total = 0
@@ -127,4 +130,4 @@ class AccountMove(models.Model):
                         break
             else:
                 return 0.00
-
+        return 0.00
