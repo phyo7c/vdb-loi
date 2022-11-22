@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_employee_tax" model="ir.actions.report">
+        <field name="name">Income Tax Report</field>
+        <field name="model">hr.employee.tax.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">income_tax_report.report_income_tax</field>
+        <field name="report_file">income_tax_report.report_income_tax</field>
+    </record>
+
+    <template id="report_income_tax">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <t t-foreach="docs" t-as="doc">
+                        <center><t t-esc="doc.company_id.name"/></center>
+                        <br/>
+                        <div align="center">
+                            <t t-set="info" t-value="get_header_info"/>
+                            Personal Income Tax Calculation Financial Year <t t-esc="info['fiscal_year']"/>
+                        </div>
+                        <br/>
+                        <table>
+                            <tr>
+                                <td>Employee ID:</td>
+                                <td><t t-esc="doc.barcode"/></td>
+                            </tr>
+                            <tr>
+                                <td>Employee Name:</td>
+                                <td><t t-esc="doc.name"/></td>
+                            </tr>
+                            <tr>
+                                <td>NRC Number:</td>
+                                <td><t t-esc="doc.nrc"/></td>
+                            </tr>
+                            <tr>
+                                <td>Position:</td>
+                                <td><t t-esc="doc.job_title"/></td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <t t-set="total_net_salary" t-value="0"/>
+                        <t t-set="total_mmk" t-value="0"/>
+                        <table class="table table-bordered mb32">
+                            <thead>
+                                <tr>
+                                    <td align="center">Type of income</td>
+                                    <td align="center">Net Salary (USD)</td>
+                                    <td align="center">Months</td>
+                                    <td align="center">Exchange Rate</td>
+                                    <td align="center">MMK</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="doc.get_net_salary_lines(doc,info['fiscal_year_id'])" t-as="line">
+                                    <tr>
+                                        <td align="right"><t t-esc="line['type_of_income']"/></td>
+                                        <td align="right">
+                                            <t t-esc="'{0:,.2f}'.format(line['net_salary'])"/>
+                                            <t t-set="total_net_salary" t-value="total_net_salary+line['net_salary']"/>
+                                        </td>
+                                        <td align="right"><t t-esc="'{0:,.2f}'.format(line['months'])"/></td>
+                                        <td align="right"><t t-esc="'{0:,.2f}'.format(line['exchange_rate'])"/></td>
+                                        <td align="right">
+                                            <t t-if="line['type_of_income'] == 'Previous Net Salary'">
+                                                <t t-esc="'{0:,.2f}'.format(line['mmk'])"/>
+                                                <t t-set="total_mmk" t-value="total_mmk+line['mmk']"/>
+                                            </t>
+                                            <t t-if="line['type_of_income'] != 'Previous Net Salary'">
+                                                <t t-esc="'{0:,.2f}'.format(line['net_salary']*line['exchange_rate'])"/>
+                                                <t t-set="total_mmk" t-value="total_mmk+line['net_salary']*line['exchange_rate']"/>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <td colspan="2" align="right"><span t-esc="'{0:,.2f}'.format(total_net_salary)"/></td>
+                                    <td colspan="2" align="right">Total Annual Net Salary in MMK</td>
+                                    <td align="right"><span t-esc="'{0:,.2f}'.format(total_mmk)"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" align="right">20% Exemption</td>
+                                    <td align="right">
+                                        <t t-set="twenty_percent_exemption" t-value="doc.get_twenty_percent_exemption(doc, total_mmk)"/>
+                                        <span t-esc="'{0:,.2f}'.format(twenty_percent_exemption['twenty_percent_exemption'])"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" align="right">Spouse Allowance</td>
+                                    <td align="right">
+                                        <t t-set="spouse_exemption" t-value="doc.get_spouse_exemption(doc)"/>
+                                        <span t-esc="'{0:,.2f}'.format(spouse_exemption['spouse_exemption'])"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" align="right">Children Allowance</td>
+                                    <td align="right">
+                                        <t t-set="children_exemption" t-value="doc.get_children_exemption(doc)"/>
+                                        <span t-esc="'{0:,.2f}'.format(children_exemption['children_exemption'])"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" align="right">Parents Allowance</td>
+                                    <td align="right">
+                                        <t t-set="parent_exemption" t-value="doc.get_parent_exemption(doc)"/>
+                                        <span t-esc="'{0:,.2f}'.format(parent_exemption['parent_exemption'])"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" align="right">Life Insurance Premium during the year</td>
+                                    <td align="right">0.00</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" align="right">SSB Contribution-Employee</td>
+                                    <td align="right">
+                                        <t t-set="ssb_amount" t-value="doc.get_ssb_amount(doc)"/>
+                                        <span t-esc="'{0:,.2f}'.format(ssb_amount['ssb_amount'])"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" align="right">Total Taxable Income</td>
+                                    <td align="right">
+                                        <t t-set="total_taxable_income" t-value="total_mmk-twenty_percent_exemption['twenty_percent_exemption']-spouse_exemption['spouse_exemption']-children_exemption['children_exemption']-parent_exemption['parent_exemption']-ssb_amount['ssb_amount']"/>
+                                        <span t-esc="'{0:,.2f}'.format(total_taxable_income)"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered mb32">
+                            <thead>
+                                <tr>
+                                    <td align="center">From</td>
+                                    <td align="center">To</td>
+                                    <td align="center">MMK</td>
+                                    <td align="center">Rate</td>
+                                    <td align="center">MMK</td>
+                                    <td align="center">Annual PIT (MMK)</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(1)"/></td>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(2000000)"/></td>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(2000000)"/></td>
+                                    <td align="center">0%</td>
+                                    <td align="right">
+                                        <t t-set="zero_percent_rate" t-value="doc.get_zero_percent_rate(total_taxable_income,2000000)"/>
+                                        <span t-esc="'{0:,.0f}'.format(zero_percent_rate['amount'])"/>
+                                    </td>
+                                    <td align="right">
+                                        0.00
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(2000001)"/></td>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(10000000)"/></td>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(8000000)"/></td>
+                                    <td align="center">5%</td>
+                                    <td align="right">
+                                        <t t-set="five_percent_rate" t-value="doc.get_five_percent_rate(total_taxable_income,8000000)"/>
+                                        <span t-esc="'{0:,.0f}'.format(five_percent_rate['amount'])"/>
+                                    </td>
+                                    <td align="right">
+                                        <span t-esc="'{0:,.0f}'.format(five_percent_rate['amount']*0.05)"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(10000001)"/></td>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(30000000)"/></td>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(20000000)"/></td>
+                                    <td align="center">10%</td>
+                                    <td align="right">
+                                        <t t-set="ten_percent_rate" t-value="doc.get_ten_percent_rate(total_taxable_income,20000000)"/>
+                                        <span t-esc="'{0:,.0f}'.format(ten_percent_rate['amount'])"/>
+                                    </td>
+                                    <td align="right">
+                                        <span t-esc="'{0:,.0f}'.format(ten_percent_rate['amount']*0.10)"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(30000001)"/></td>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(50000000)"/></td>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(20000000)"/></td>
+                                    <td align="center">15%</td>
+                                    <td align="right">
+                                        <t t-set="fifteen_percent_rate" t-value="doc.get_fifteen_percent_rate(total_taxable_income,20000000)"/>
+                                        <span t-esc="'{0:,.0f}'.format(fifteen_percent_rate['amount'])"/>
+                                    </td>
+                                    <td align="right">
+                                        <span t-esc="'{0:,.0f}'.format(fifteen_percent_rate['amount']*0.15)"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(50000001)"/></td>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(70000000)"/></td>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(20000000)"/></td>
+                                    <td align="center">20%</td>
+                                    <td align="right">
+                                        <t t-set="twenty_percent_rate" t-value="doc.get_twenty_percent_rate(total_taxable_income,20000000)"/>
+                                        <span t-esc="'{0:,.0f}'.format(twenty_percent_rate['amount'])"/>
+                                    </td>
+                                    <td align="right">
+                                        <span t-esc="'{0:,.0f}'.format(twenty_percent_rate['amount']*0.20)"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(70000001)"/></td>
+                                    <td>and above</td>
+                                    <td></td>
+                                    <td align="center">25%</td>
+                                    <td align="right">
+                                        <t t-set="twenty_five_percent_rate" t-value="doc.get_twenty_five_percent_rate(total_taxable_income)"/>
+                                        <span t-esc="'{0:,.0f}'.format(twenty_five_percent_rate['amount'])"/>
+                                    </td>
+                                    <td align="right">
+                                        <span t-esc="'{0:,.0f}'.format(twenty_five_percent_rate['amount']*0.25)"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" align="right">Total Payable PIT for FY <t t-esc="info['fiscal_year']"/> (<t t-esc="info['start_month']"/> <t t-esc="info['start_year']"/> to <t t-esc="info['end_month']"/> <t t-esc="info['end_year']"/>)</td>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(zero_percent_rate['amount']+five_percent_rate['amount']+ten_percent_rate['amount']+fifteen_percent_rate['amount']+twenty_percent_rate['amount']+twenty_five_percent_rate['amount'])"/></td>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(zero_percent_rate['amount']*0+five_percent_rate['amount']*0.05+ten_percent_rate['amount']*0.10+fifteen_percent_rate['amount']*0.15+twenty_percent_rate['amount']*0.20+twenty_five_percent_rate['amount']*0.25)"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" align="right">Annual Personal Income Tax ("PIT") MMK</td>
+                                    <td align="right"><span t-esc="'{0:,.0f}'.format(zero_percent_rate['amount']*0+five_percent_rate['amount']*0.05+ten_percent_rate['amount']*0.10+fifteen_percent_rate['amount']*0.15+twenty_percent_rate['amount']*0.20+twenty_five_percent_rate['amount']*0.25)"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <t t-set="total_income_tax" t-value="0"/>
+                        <table class="table table-bordered mb32">
+                            <tr>
+                                <td colspan="2" align="right">Balance</td>
+                            </tr>
+                            <t t-foreach="doc.get_income_tax_lines(doc,info['fiscal_year_id'])" t-as="line">
+                                <tr>
+                                    <td align="right"><t t-esc="line['name']"/></td>
+                                    <td align="right">
+                                        <t t-esc="'{0:,.2f}'.format(line['amount'])"/>
+                                        <t t-set="total_income_tax" t-value="total_income_tax+line['amount']"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td colspan="2" align="right"><t t-esc="'{0:,.2f}'.format(total_income_tax)"/></td>
+                            </tr>
+                        </table>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
