@@ -68,7 +68,7 @@ class ReportController(main.ReportController):
         requestcontent = json.loads(data)
         url, report_type = requestcontent[0], requestcontent[1]
         if "py3o" not in report_type:
-            return super(ReportController, self).report_download(data, token)
+            return super(ReportController, self).report_download(data, context=None)
         try:
             reportname = url.split("/report/py3o/")[1].split("?")[0]
             docids = None
