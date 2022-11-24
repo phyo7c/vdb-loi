@@ -58,7 +58,7 @@ class ReportPayrollWizard(models.TransientModel):
                   'Total Annual Salary exceeding minimum threhold for PIT exemption ', '20%, not more than MMK10000000', '(MMK 1000000) for only one spouse',
                   '(MMK 500000 per minor child)', '(MMK 1000000 per parent)', 'Employee(2%)', 'Total Tax Relief', 'Annual Taxable Income',
                   'Tax rate', 'Previous Payable PIT - MMK (PC)', 'Payable PIT to IRD - MMK',
-                  'Total Payable PIT to the IRD on salary (MMK) -' + month_name, 'Total Payable PIT to the IRD on salary (USD)-' + month_name, "PIT (USD) As per PC's system generated payroll"]
+                  'Total Payable PIT to the IRD on salary (MMK) -' + month_name, 'Total Payable PIT to the IRD on salary (USD)-' + month_name, "PIT (USD) As per VDB Loi system generated payroll"]
 
         tcol_no = 0
         y_offset = 0
