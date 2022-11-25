@@ -119,7 +119,7 @@ class AccountMove(models.Model):
             m = payslip_id.date_from.month
             if m > 0 and m == 5:
                 for line_id in payslip_id.line_ids:
-                    if line_id.code == 'PIT':
+                    if line_id.code == '20P':
                         total = round(line_id.total, 2)
                         total = f"{total:,}"
                         split_num = total.split(".")
