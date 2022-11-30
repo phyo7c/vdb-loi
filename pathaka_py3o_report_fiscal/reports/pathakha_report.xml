@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_employee_pathakha" model="ir.actions.report">
+        <field name="name">PaThaKha Report</field>
+        <field name="model">hr.employee.pathakha.report</field>
+        <field name="report_type">py3o</field>
+        <field name="report_name">pathaka_py3o_report_fiscal.report_pathakha_print</field>
+        <field name="report_file">pathaka_py3o_report_fiscal.report_pathakha_print</field>
+        <field name="py3o_filetype">pdf</field>
+        <field name="module">pathaka_py3o_report_fiscal</field>
+        <field name="py3o_template_fallback">pathaka_report.odt</field>
+    </record>
+
+</odoo>
