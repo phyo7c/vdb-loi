@@ -67,4 +67,4 @@ class EmployeeTaxReport(models.TransientModel):
             return MONTH_SELECTION[check][1]
 
     def font_generate(self):
-        return 'ကုမ္ပဏီ/'
+        return 'ကုမ္ပဏီ/ဌာန/အဖွဲ့အစည်းအမည်'
