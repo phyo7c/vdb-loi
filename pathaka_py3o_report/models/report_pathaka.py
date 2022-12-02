@@ -117,10 +117,9 @@ class AccountMove(models.Model):
         payslip_ids = self.env['hr.payslip'].search([('employee_id','=',self.id)])
         for payslip_id in payslip_ids:
             m = payslip_id.date_from.month
-            # if m > 0 and m == 5:
-            if m > 0:
+            if m > 0 and m == 5:
                 for line_id in payslip_id.line_ids:
-                    if line_id.code == '20P':
+                    if line_id.code == 'PIT':
                         total = round(line_id.total, 2)
                         total = f"{total:,}"
                         split_num = total.split(".")
