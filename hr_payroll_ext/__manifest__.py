@@ -15,6 +15,7 @@ HR Payroll Extension
     'data': [
             'views/hr_payroll_rule_view.xml',
             'views/hr_payslip_view.xml',
+            'views/hr_payslip_run_view.xml',
     ],
     'installable': True,
     'auto_install': False,
