@@ -60,7 +60,7 @@ class AccountMove(models.Model):
         payslip_ids = self.env['hr.payslip'].search([('employee_id', '=', self.id),
                                                      ('date_to', '>', fiscal.date_from),
                                                      ('date_to', '<', fiscal.date_to)])
-        tax_approve = ''
+        tax_approve = ' '
         for payslip_id in payslip_ids:
             m = payslip_id.date_to.month
             if m == month:
