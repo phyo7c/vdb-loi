@@ -42,6 +42,7 @@
 				<xpath expr="//field[@name='financial_year']" position="after">
 					<field name="previous_tax_office" />
 					<field name="previous_tax_no" />
+					<field name="employee_tax_id" />
 				</xpath>
 			</field>
 		</record>

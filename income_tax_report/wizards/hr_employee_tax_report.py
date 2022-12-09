@@ -11,6 +11,7 @@ class EmployeeTaxReport(models.TransientModel):
         self.ensure_one()
         [data] = self.read()
         data['emp'] = self.env.context.get('active_ids', [])
+        data['fiscal_year_id'] = self.fiscal_year_id.id
         employees = self.env['hr.employee'].browse(data['emp'])
         datas = {
             'ids': [],
