@@ -52,8 +52,8 @@ class ReportPayrollWizard(models.TransientModel):
         if fiscal_year:
             title_name += ' [FY ' + fiscal_year.name + ']'
 
-        titles = ['Sr no.', 'Employee ID', 'Employee Name','NRC','GIR', 'Total working months for Contract employee', 'No of ParentsNo',
-                  '(Yes/No)', 'No of Children No', 'Currency', 'Residency Status','Basic Salary - USD', 'Hardship', 'Skill',
+        titles = ['Sr no.', 'Employee ID', 'Employee Name','NRC','GIR', 'Total working months for Contract employee', 'No of Parents',
+                  '(Yes/No)', 'No of Children', 'Currency', 'Residency Status','Basic Salary - USD', 'Hardship', 'Skill',
                   'Transportation Allowance',]
 
         title2 = ['Monthly Salary - USD', 'FX',
@@ -98,7 +98,7 @@ class ReportPayrollWizard(models.TransientModel):
             domain += [('employee_id.department_id', '=', self.department_id.id)]
         if self.employee_id:
                 domain += [('employee_id', '=', self.employee_id.id)]
-        payslips = self.env['hr.payslip'].sudo().search(domain)
+        payslips = self.env['hr.payslip'].sudo().search(domain, order='badge_id asc')
 
         if not payslips:
             raise UserError(_("There is no payslip for this date range"))
@@ -108,6 +108,7 @@ class ReportPayrollWizard(models.TransientModel):
         total_monthly_mmk = 0
         number = 1
         row = 5
+
         for payslip in payslips:
             ssb = basic = skill = transportation  = hardship = 0
             parent_no = exemption = spouse_exemption = child_exemption = parent_exemption = annual_tax_income = annual_pay_tax = tax_rate = 0
@@ -115,6 +116,7 @@ class ReportPayrollWizard(models.TransientModel):
             total_pay_income_tax_usd = total_pay_income_tax = 0
             fiscal_domain += [('employee_id', '>=', payslip.employee_id.id),('date_to', '<', self.date_from)]
             fic_payslips = self.env['hr.payslip'].sudo().search(fiscal_domain, order="date_to asc")
+            total_months = (self.date_from.month - fiscal_year.date_from.month) + 1
             spouse = 'No'
             total_remaining_months = 12
             if payslip.employee_id.contract_id.date_end:
@@ -125,7 +127,7 @@ class ReportPayrollWizard(models.TransientModel):
                 spouse = 'Yes'
             if payslip.employee_id.tax_exemption_father:
                 parent_no +=1
-            elif payslip.employee_id.tax_exemption_mother:
+            if payslip.employee_id.tax_exemption_mother:
                 parent_no += 1
             basic = self.salary_by_code(payslip_lines, 'BASIC') / currency_rate
             hardship = self.salary_by_code(payslip_lines, 'HARDSHIP') / currency_rate
@@ -186,21 +188,31 @@ class ReportPayrollWizard(models.TransientModel):
             title_y_offest =3
 
             non_fixed_categs = self.env['hr.salary.rule.category'].search([('code', '=', 'NFA')])
-            non_fixed_payslips = self.env['hr.payslip.line'].search([('id', '=', payslip_lines.ids), ('category_id', 'in', non_fixed_categs.ids)])
-            for slip in non_fixed_payslips:
-                sheet.write(title_y_offest, col, slip.display_name, header_style)
-                sheet.write(y_offset, col, (slip.total / currency_rate) or '-', float_style)
+            non_fixed_title = self.env['hr.salary.rule'].search([('category_id', 'in', non_fixed_categs.ids)])
+            for non_fixed_tit in non_fixed_title:
+                sheet.write(title_y_offest, col, non_fixed_tit.name, header_style)
+                non_fixed_payslips = self.env['hr.payslip.line'].search([('id', '=', payslip_lines.ids), ('code', '=', non_fixed_tit.code)])
+                sheet.write(y_offset, col, (non_fixed_payslips.total / currency_rate) or '-', float_style)
                 col += 1
             sheet.merge_range(2, 15, 2, col, 'Non- Fixed - USD', header_style)
             sheet.write(title_y_offest, col, 'SSB EE Contrib', header_style)
             sheet.write(y_offset, col, ssb or '-', float_style)
             col += 1
-            for previous_slip in fic_payslips:
-                previous_payslip_lines = previous_slip.line_ids
-                sheet.write(2, col, previous_slip.date_to.strftime('%B') + ' ' + str(previous_slip.date_to.year), header_style)
-                sheet.write(title_y_offest, col, 'Monthly Salary - USD', header_style)
-                sheet.write(y_offset, col, self.salary_by_code(previous_payslip_lines, 'NETUSD') or '-', float_style)
-                col += 1
+            my_date_months = 0
+            for mm in range(0,total_months):
+                if not fiscal_year.date_from > self.date_from:
+                    if my_date_months != fiscal_year.date_from:
+                        my_date_months = fiscal_year.date_from + relativedelta(months=mm)
+                        sheet.write(2, col, my_date_months.strftime('%B') + ' ' + str(my_date_months.year), header_style)
+                        sheet.write(title_y_offest, col, 'Monthly Salary - USD', header_style)
+                        fiscal_domain += [('employee_id', '=', payslip.employee_id.id), ('date_from', '<=', my_date_months)]
+                        fic_payslips = self.env['hr.payslip'].sudo().search(fiscal_domain, order="date_to asc")
+                        if fic_payslips:
+                            previous_payslip_lines = fic_payslips.line_ids
+                            sheet.write(y_offset, col, self.salary_by_code(previous_payslip_lines, 'NETUSD') or '-',  float_style)
+                        else:
+                            sheet.write(y_offset, col, '-', float_style)
+                        col += 1
             sheet.merge_range(2, col, 2, col+2, title_name, header_style)
             sheet.write(2, col + 7, 'Basic Exemption', header_style)
             sheet.write(2, col + 8, 'Spouse', header_style)
@@ -209,8 +221,8 @@ class ReportPayrollWizard(models.TransientModel):
             sheet.write(2, col + 12, 'SSC (Annual basis)', header_style)
 
             tit_col = col
-            for i, title2 in enumerate(title2):
-                sheet.write(title_y_offest, tit_col, title2, header_style)
+            for i, tit in enumerate(title2):
+                sheet.write(title_y_offest, tit_col, tit, header_style)
                 tit_col += 1
             sheet.write(y_offset, col, monthly_basic_usd or '-', float_style)
             col += 1
@@ -248,13 +260,21 @@ class ReportPayrollWizard(models.TransientModel):
             col += 1
             sheet.write(y_offset, col, annual_payable or '-', float_style)
             col += 1
-            for previous_slip in fic_payslips:
-                previous_payslip_lines = previous_slip.line_ids
-                prev_month_name = previous_slip.date_to.strftime('%B') + ' ' + str(previous_slip.date_to.year)
-                sheet.write(2, col, prev_month_name + ' Tax', header_style)
-                sheet.write(title_y_offest, col, 'Total Payable PIT to the IRD on salary (MMK) -' + prev_month_name, header_style)
-                sheet.write(y_offset, col, self.salary_by_code(previous_payslip_lines, 'PIT') or '-', float_style)
-                col += 1
+            date_months = 0
+            for mm in range(0,total_months):
+                if not fiscal_year.date_from >= self.date_from and date_months != fiscal_year.date_from:
+                    date_months = fiscal_year.date_from + relativedelta(months=mm)
+                    prev_month_name = my_date_months.strftime('%B') + ' ' + str(date_months.year)
+                    sheet.write(2, col, prev_month_name + ' Tax', header_style)
+                    sheet.write(title_y_offest, col, 'Total Payable PIT to the IRD on salary (MMK) -' + prev_month_name, header_style)
+                    fiscal_domain += [('employee_id', '=', payslip.employee_id.id), ('date_from', '<=', date_months)]
+                    fic_payslips = self.env['hr.payslip'].sudo().search(fiscal_domain, order="date_to asc")
+                    if fic_payslips:
+                        previous_payslip_lines = fic_payslips.line_ids
+                        sheet.write(y_offset, col, self.salary_by_code(previous_payslip_lines, 'PIT') or '-',  float_style)
+                    else:
+                        sheet.write(y_offset, col, '-', float_style)
+                    col += 1
             sheet.write(title_y_offest, col, 'Total Payable PIT to the IRD on salary (MMK) -' + month_name, header_style)
             sheet.write(y_offset, col, total_pay_income_tax or '-', float_style)
             col += 1

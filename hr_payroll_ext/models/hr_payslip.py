@@ -10,6 +10,12 @@ class HRPaySlip(models.Model):
     previous_income = fields.Float('Previous Income', compute='_compute_previous_amount', store=True)
     previous_tax_paid = fields.Float('Previous Tax Paid', compute='_compute_previous_amount', store=True)
     remaining_months = fields.Integer('Remaining Months', compute='_compute_previous_amount', store=True)
+    badge_id = fields.Integer('Badge ID', compute='_get_employee_id', store=True)
+
+    @api.depends('employee_id')
+    def _get_employee_id(self):
+        for rec in self:
+            rec.badge_id = int(rec.employee_id.barcode)
 
     @api.depends('employee_id', 'date_from', 'date_to')
     def _compute_previous_amount(self):
