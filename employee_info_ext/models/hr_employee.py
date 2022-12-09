@@ -30,6 +30,7 @@ class EmployeeNrc(models.Model):
     previous_tax_no = fields.Char(string='Previous Tax ID')
     residency_status = fields.Char(string="Residency status")
     gir = fields.Char(string='GIR')
+    employee_tax_id = fields.Char(string='Employee Tax ID')
 
     @api.onchange('nrc_region_code')
     def _onchange_nrc_region_code(self):
