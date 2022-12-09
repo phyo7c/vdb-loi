@@ -55,6 +55,18 @@ class AccountMove(models.Model):
                 return 0.0
         return 0.0
 
+    def _get_batches_tax_no(self, i, month, fiscal):
+        month = int(self.get_month_list(i, month))
+        payslip_ids = self.env['hr.payslip'].search([('employee_id', '=', self.id),
+                                                     ('date_to', '>', fiscal.date_from),
+                                                     ('date_to', '<', fiscal.date_to)])
+        tax_approve = ' '
+        for payslip_id in payslip_ids:
+            m = payslip_id.date_to.month
+            if m == month:
+                tax_approve = payslip_id.payslip_run_id.tax_approval_no
+        return tax_approve
+
     def _get_total(self, fiscal, code):
         payslip_ids = self.env['hr.payslip'].search([('employee_id', '=', self.id),
                                                      ('date_to', '>', fiscal.date_from),
