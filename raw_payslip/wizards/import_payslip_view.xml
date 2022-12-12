@@ -10,6 +10,9 @@
                     <group>
                         <field name="imported"/>
                     </group>
+                    <group>
+                        <field name="batch_id"/>
+                    </group>
                     <span class="o_form_label">All raw payslips will be imported to payslip. You won't be able to modify them afterwards.</span>
                     <footer>
                         <button string="Import to Payslip" name="import_payslip" type="object" default_focus="1" class="btn-primary" data-hotkey="q"/>

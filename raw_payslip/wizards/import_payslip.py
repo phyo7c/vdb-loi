@@ -5,6 +5,7 @@ class ImportPayslip(models.TransientModel):
     _name = "import.payslip"
 
     imported = fields.Boolean(string="Imported", default=True)
+    batch_id = fields.Many2one('hr.payslip.run', string='Batch')
 
     def import_payslip(self):
         if self._context.get('active_model') == 'raw.payslip':
@@ -217,6 +218,7 @@ class ImportPayslip(models.TransientModel):
                     "date_to": payslip.to_date,
                     "contract_id": contract.id,
                     "struct_id": structure.id,
+                    "payslip_run_id": self.batch_id.id,
                     "company_id": company.id,
                 }
                 emp_payslip = self.env['hr.payslip'].sudo().create(payslip_vals)
