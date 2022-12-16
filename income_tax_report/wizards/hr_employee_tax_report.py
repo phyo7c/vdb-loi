@@ -12,7 +12,7 @@ class EmployeeTaxReport(models.TransientModel):
 
     def _get_report_base_filename(self, emp_name, date_string, sub_area):
         self.ensure_one()
-        month = datetime.strptime(date_string, '%Y-%m-%d').strftime('%b %d')
+        month = datetime.strptime(date_string, '%Y-%m-%d').strftime('%b %y')
         return '%s_%s %s_%s' % (emp_name, 'Individual Tax Calculation for', month, sub_area)
 
     def print_report(self):
