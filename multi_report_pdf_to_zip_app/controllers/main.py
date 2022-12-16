@@ -83,7 +83,13 @@ class ReportControllerInherited(ReportController):
 					obj = request.env[report.model].browse(docid)
 					filename = original_filename
 					if report.print_report_name:
-						report_name = safe_eval(report.print_report_name, {'object': obj})
+						report_custom = report.print_report_name
+						if report.model == 'hr.employee.tax.report':
+							emp_id = request.env['hr.employee'].browse(docid)
+							report_date = data['form']['report_date']
+							variable_add = report_custom.split('()')[0] + "('" + emp_id.name + "','" + report_date + "','" + emp_id.subarea_id.name + "')" + report_custom.split('()')[1]
+							report_custom = variable_add
+						report_name = safe_eval(report_custom, {'object': obj})
 						filename = "%s.%s" % (report_name, converter)
 						filename = filename.replace("/",",")
 						filenames.append(filename)
@@ -177,23 +183,12 @@ class ReportControllerInherited(ReportController):
 							flag = False
 						else:
 							docids += ',' + temp_list
-				url_cutoff = url.split('fiscal_year_id')
-				fiscal_year = {}
-				if len(url_cutoff) > 1:
-					fiscal_cutoff = url_cutoff[1].split('emp')
-					if fiscal_cutoff:
-						fiscal_years = fiscal_cutoff[0].split('%')
-						if fiscal_years:
-							for data_list in fiscal_years:
-								rang = len(data_list)
-								if rang > 2:
-									fiscal_year_id = int(data_list[2:])
-									fiscal_year['fiscal_year_id'] = fiscal_year_id
-				if docids and not fiscal_year:
+				if docids and not reportname == 'income_tax_report.report_income_tax':
 					# Generic report:
 					response = self.report_routes(reportname, docids=docids, converter=converter)
-				elif docids and fiscal_year:
-					response = self.report_routes(reportname, docids=docids, converter=converter, **fiscal_year)
+				elif docids and reportname == 'income_tax_report.report_income_tax':
+					data = list(url_decode(url.split('?')[1]).items())
+					response = self.report_routes(reportname, docids=docids, converter=converter, **dict(data))
 				else:
 					# Particular report:
 					data = url_decode(url.split('?')[1]).items()  # decoding the args represented in JSON

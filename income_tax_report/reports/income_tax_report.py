@@ -41,13 +41,9 @@ class HrEmployeeIncomeTaxReport(models.AbstractModel):
         #     raise UserError(_("Form content is missing, this report cannot be printed."))
 
         income_tax_report = self.env['ir.actions.report']._get_report_from_name('income_tax_report.report_income_tax')
-        if docids:
-            employees = self.env['hr.employee'].browse(docids)
-            fiscal_year_name = self.env['account.fiscal.year'].browse(data.get('fiscal_year_id')).name
-            fiscal_year = [data.get('fiscal_year_id'), fiscal_year_name]
-        else:
-            employees = self.env['hr.employee'].browse(data['form']['emp'])
-            fiscal_year = data['form']['fiscal_year_id']
+        employees = self.env['hr.employee'].browse(data['form']['emp'])
+        fiscal_year_name = self.env['account.fiscal.year'].browse(data['form']['fiscal_year_id']).name
+        fiscal_year = [data['form']['fiscal_year_id'], fiscal_year_name]
         return {
             'doc_ids': self.ids,
             'doc_model': income_tax_report.model,
