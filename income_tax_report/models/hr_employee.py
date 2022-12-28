@@ -3,21 +3,54 @@ from odoo import fields, models, tools, api, _
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
+    def salary_by_code(self, payslip_lines, code):
+        line = payslip_lines.filtered(lambda l: l.code == code)
+        if line:
+            return line.total
+        else:
+            return 0
+
     def get_net_salary_lines(self, employee, fiscal_year_id):
         employees = self.env['hr.employee'].browse(employee.id)
         fiscal_year = self.env['account.fiscal.year'].browse(fiscal_year_id)
         for emp in employees:
             res = []
             last_salary = 0
+            last_mmk = 0
             previous_income_total = 0.00
-            if emp.financial_year and emp.financial_year.id == fiscal_year.id:
-                previous_income_total = emp.pre_income_total
-            res.append({"type_of_income": "Previous Net Salary",
-                        "net_salary": 0,
-                        "months": 1.00,
-                        "exchange_rate": 0.00,
-                        "mmk": previous_income_total,
-                        })
+            self.env.cr.execute(
+                """select from_date,to_date,hp.id
+                from
+                (
+                    select *,TO_CHAR(
+                        TO_DATE (date_part('month',from_date)::text, 'MM'), 'Mon'
+                        ) AS month_name,date_part('year', from_date) AS year_name
+                    from 
+                    (
+                        select generate_series(date_from,date_to, '1 month'::interval)::date from_date,
+                        (date_trunc('month', generate_series(date_from,date_to, '1 month'::interval)::date) + interval '1 month' - interval '1 day')::date to_date
+                        from account_fiscal_year 
+                        where id=%s
+                    )A
+                )B
+                left join hr_payslip hp on (B.from_date=hp.date_from and B.to_date=hp.date_to)
+                where hp.employee_id=%s
+                order by hp.date_to limit 1;""",
+                (fiscal_year.id, emp.id,))
+            first_payslip = self.env.cr.fetchall()
+            if first_payslip:
+                for slip in first_payslip:
+                    payslip = self.env['hr.payslip'].search([('id', '=', slip[2])])
+                    if payslip:
+                        previous_income_total = self.salary_by_code(payslip.line_ids, 'PREI')
+                    else:
+                        previous_income_total = 0
+                res.append({"type_of_income": "Previous Net Salary",
+                            "net_salary": 0,
+                            "months": 1.00,
+                            "exchange_rate": 0.00,
+                            "mmk": previous_income_total,
+                            })
             self.env.cr.execute(
                 """select *,concat(month_name,' ',year_name,' Net Salary') full_name
                 from
@@ -41,16 +74,53 @@ class HrEmployee(models.Model):
                     payslip = self.env['hr.payslip'].search([('date_from', '=', month[0]),('date_to', '=', month[1]),('employee_id', '=', emp.id)],limit=1)
                     if payslip:
                         currency_rate = payslip.currency_rate
-                        net_salary = payslip.salary
-                        last_salary = payslip.salary
+                        net_salary = self.salary_by_code(payslip.line_ids, 'NETUSD')
+                        last_salary = self.salary_by_code(payslip.line_ids, 'NMIUSD')
+                        mmk = self.salary_by_code(payslip.line_ids, 'GROSS')
+                        last_mmk = last_salary * currency_rate
                     else:
                         net_salary = last_salary
+                        mmk = last_mmk
                     res.append({"type_of_income": month[4],
                                 "net_salary": net_salary,
                                 "months": 1.00,
                                 "exchange_rate": currency_rate,
+                                "mmk": mmk,
                                 })
         return res
+
+    def get_annual_total_income(self, employee, fiscal_year_id, code):
+        fiscal_year = self.env['account.fiscal.year'].browse(fiscal_year_id)
+        self.env.cr.execute(
+            """select from_date,to_date,hp.id
+            from
+            (
+                select *,TO_CHAR(
+                    TO_DATE (date_part('month',from_date)::text, 'MM'), 'Mon'
+                    ) AS month_name,date_part('year', from_date) AS year_name
+                from 
+                (
+                    select generate_series(date_from,date_to, '1 month'::interval)::date from_date,
+                    (date_trunc('month', generate_series(date_from,date_to, '1 month'::interval)::date) + interval '1 month' - interval '1 day')::date to_date
+                    from account_fiscal_year 
+                    where id=%s
+                )A
+            )B
+            left join hr_payslip hp on (B.from_date=hp.date_from and B.to_date=hp.date_to)
+            where hp.employee_id=%s
+            order by hp.date_to desc limit 1;""",
+            (fiscal_year.id,employee.id,))
+        last_payslip = self.env.cr.fetchall()
+        if last_payslip:
+            for slip in last_payslip:
+                payslip = self.env['hr.payslip'].search([('id', '=', slip[2])])
+                if payslip:
+                    amount = self.salary_by_code(payslip.line_ids, code)
+                else:
+                    amount = 0
+        return {
+            "amount": amount,
+        }
 
     def get_twenty_percent_exemption(self, employee, total_amount):
         if total_amount * 0.2 >= 10000000:
@@ -174,8 +244,33 @@ class HrEmployee(models.Model):
             res = []
             last_income_tax = 0
             previous_tax_paid = 0.00
-            if emp.financial_year and emp.financial_year.id == fiscal_year.id:
-                previous_tax_paid = emp.pre_tax_paid
+            self.env.cr.execute(
+                """select from_date,to_date,hp.id
+                from
+                (
+                    select *,TO_CHAR(
+                        TO_DATE (date_part('month',from_date)::text, 'MM'), 'Mon'
+                        ) AS month_name,date_part('year', from_date) AS year_name
+                    from 
+                    (
+                        select generate_series(date_from,date_to, '1 month'::interval)::date from_date,
+                        (date_trunc('month', generate_series(date_from,date_to, '1 month'::interval)::date) + interval '1 month' - interval '1 day')::date to_date
+                        from account_fiscal_year 
+                        where id=%s
+                    )A
+                )B
+                left join hr_payslip hp on (B.from_date=hp.date_from and B.to_date=hp.date_to)
+                where hp.employee_id=%s
+                order by hp.date_to limit 1;""",
+                (fiscal_year.id, emp.id,))
+            first_payslip = self.env.cr.fetchall()
+            if first_payslip:
+                for slip in first_payslip:
+                    payslip = self.env['hr.payslip'].search([('id', '=', slip[2])])
+                    if payslip:
+                        previous_tax_paid = self.salary_by_code(payslip.line_ids, 'PRETP')
+                    else:
+                        previous_tax_paid = 0
             res.append({"name": "Previous Income Tax",
                         "amount": previous_tax_paid,
                         })
