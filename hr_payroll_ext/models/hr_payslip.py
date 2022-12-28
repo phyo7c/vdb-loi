@@ -3,6 +3,7 @@ from datetime import date, datetime, time, timedelta
 from dateutil.relativedelta import relativedelta
 from odoo.tools import float_round, date_utils, convert_file, html2plaintext, is_html_empty, format_amount
 
+
 class HRPaySlip(models.Model):
     _inherit = 'hr.payslip'
 
@@ -11,6 +12,12 @@ class HRPaySlip(models.Model):
     previous_tax_paid = fields.Float('Previous Tax Paid', compute='_compute_previous_amount', store=True)
     remaining_months = fields.Integer('Remaining Months', compute='_compute_previous_amount', store=True)
     badge_id = fields.Integer('Badge ID', compute='_get_employee_id', store=True)
+    insurance_amt = fields.Float('Insurance Amount')
+
+    @api.onchange('employee_id')
+    def _onchange_employee(self):
+        if self.employee_id:
+            self.insurance_amt = self.employee_id.insurance_amt
 
     @api.depends('employee_id')
     def _get_employee_id(self):

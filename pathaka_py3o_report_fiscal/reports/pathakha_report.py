@@ -41,6 +41,11 @@ class EmployeeTaxReport(models.TransientModel):
     month = fields.Selection(selection=MONTH_SELECTION, string='Start Month', required=True,
                              default='10')
 
+    @api.onchange('fiscal_year_id')
+    def _onchange_fiscal_year(self):
+        if self.fiscal_year_id and self.fiscal_year_id.date_from:
+            self.month = str(self.fiscal_year_id.date_from.month)
+
     def print_report(self):
         self.ensure_one()
         [data] = self.read()
