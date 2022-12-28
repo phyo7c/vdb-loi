@@ -69,61 +69,69 @@
                                                 <t t-set="total_mmk" t-value="total_mmk+line['mmk']"/>
                                             </t>
                                             <t t-if="line['type_of_income'] != 'Previous Net Salary'">
-                                                <t t-esc="'{0:,.2f}'.format(line['net_salary']*line['exchange_rate'])"/>
-                                                <t t-set="total_mmk" t-value="total_mmk+line['net_salary']*line['exchange_rate']"/>
+                                                <t t-esc="'{0:,.2f}'.format(line['mmk'])"/>
                                             </t>
                                         </td>
                                     </tr>
                                 </t>
                                 <tr>
-                                    <td colspan="2" align="right"><span t-esc="'{0:,.2f}'.format(total_net_salary)"/></td>
+                                    <td colspan="2" align="right">
+                                        <t t-set="annual_total_income_usd" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'ATIUSD')"/>
+                                        <span t-esc="'{0:,.2f}'.format(annual_total_income_usd['amount'])"/>
+                                    </td>
                                     <td colspan="2" align="right">Total Annual Net Salary in MMK</td>
-                                    <td align="right"><span t-esc="'{0:,.2f}'.format(total_mmk)"/></td>
+                                    <td align="right">
+                                        <t t-set="annual_total_income" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'ATINC')"/>
+                                        <span t-esc="'{0:,.2f}'.format(annual_total_income['amount'])"/>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td colspan="4" align="right">20% Exemption</td>
                                     <td align="right">
-                                        <t t-set="twenty_percent_exemption" t-value="doc.get_twenty_percent_exemption(doc, total_mmk)"/>
-                                        <span t-esc="'{0:,.2f}'.format(twenty_percent_exemption['twenty_percent_exemption'])"/>
+                                        <t t-set="twenty_percent_exemption" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'20P')"/>
+                                        <span t-esc="'{0:,.2f}'.format(twenty_percent_exemption['amount'])"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="4" align="right">Spouse Allowance</td>
                                     <td align="right">
-                                        <t t-set="spouse_exemption" t-value="doc.get_spouse_exemption(doc)"/>
-                                        <span t-esc="'{0:,.2f}'.format(spouse_exemption['spouse_exemption'])"/>
+                                        <t t-set="spouse_exemption" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'SPE')"/>
+                                        <span t-esc="'{0:,.2f}'.format(spouse_exemption['amount'])"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="4" align="right">Children Allowance</td>
                                     <td align="right">
-                                        <t t-set="children_exemption" t-value="doc.get_children_exemption(doc)"/>
-                                        <span t-esc="'{0:,.2f}'.format(children_exemption['children_exemption'])"/>
+                                        <t t-set="children_exemption" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'CDE')"/>
+                                        <span t-esc="'{0:,.2f}'.format(children_exemption['amount'])"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="4" align="right">Parents Allowance</td>
                                     <td align="right">
-                                        <t t-set="parent_exemption" t-value="doc.get_parent_exemption(doc)"/>
-                                        <span t-esc="'{0:,.2f}'.format(parent_exemption['parent_exemption'])"/>
+                                        <t t-set="parent_exemption" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'PTE')"/>
+                                        <span t-esc="'{0:,.2f}'.format(parent_exemption['amount'])"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="4" align="right">Life Insurance Premium during the year</td>
-                                    <td align="right">0.00</td>
+                                    <td align="right">
+                                        <t t-set="life_insurance" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'INSE')"/>
+                                        <span t-esc="'{0:,.2f}'.format(life_insurance['amount'])"/>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td colspan="4" align="right">SSB Contribution-Employee</td>
                                     <td align="right">
-                                        <t t-set="ssb_amount" t-value="doc.get_ssb_amount(doc)"/>
-                                        <span t-esc="'{0:,.2f}'.format(ssb_amount['ssb_amount'])"/>
+                                        <t t-set="ssb_amount" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'SSBE')"/>
+                                        <span t-esc="'{0:,.2f}'.format(ssb_amount['amount'])"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="4" align="right">Total Taxable Income</td>
                                     <td align="right">
-                                        <t t-set="total_taxable_income" t-value="total_mmk-twenty_percent_exemption['twenty_percent_exemption']-spouse_exemption['spouse_exemption']-children_exemption['children_exemption']-parent_exemption['parent_exemption']-ssb_amount['ssb_amount']"/>
-                                        <span t-esc="'{0:,.2f}'.format(total_taxable_income)"/>
+                                        <t t-set="ATI" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'ATI')"/>
+                                        <span t-esc="'{0:,.2f}'.format(ATI['amount'])"/>
                                     </td>
                                 </tr>
                             </tbody>
@@ -146,8 +154,8 @@
                                     <td align="right"><span t-esc="'{0:,.0f}'.format(2000000)"/></td>
                                     <td align="center">0%</td>
                                     <td align="right">
-                                        <t t-set="zero_percent_rate" t-value="doc.get_zero_percent_rate(total_taxable_income,2000000)"/>
-                                        <span t-esc="'{0:,.0f}'.format(zero_percent_rate['amount'])"/>
+                                        <t t-set="zero_percent_rate" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'0PA')"/>
+                                        <span t-esc="'{0:,.2f}'.format(zero_percent_rate['amount'])"/>
                                     </td>
                                     <td align="right">
                                         0.00
@@ -159,11 +167,12 @@
                                     <td align="right"><span t-esc="'{0:,.0f}'.format(8000000)"/></td>
                                     <td align="center">5%</td>
                                     <td align="right">
-                                        <t t-set="five_percent_rate" t-value="doc.get_five_percent_rate(total_taxable_income,8000000)"/>
-                                        <span t-esc="'{0:,.0f}'.format(five_percent_rate['amount'])"/>
+                                        <t t-set="five_percent_rate" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'5PA')"/>
+                                        <span t-esc="'{0:,.2f}'.format(five_percent_rate['amount'])"/>
                                     </td>
                                     <td align="right">
-                                        <span t-esc="'{0:,.0f}'.format(five_percent_rate['amount']*0.05)"/>
+                                        <t t-set="five_PPIT" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'5PPIT')"/>
+                                        <span t-esc="'{0:,.2f}'.format(five_PPIT['amount'])"/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -172,11 +181,12 @@
                                     <td align="right"><span t-esc="'{0:,.0f}'.format(20000000)"/></td>
                                     <td align="center">10%</td>
                                     <td align="right">
-                                        <t t-set="ten_percent_rate" t-value="doc.get_ten_percent_rate(total_taxable_income,20000000)"/>
-                                        <span t-esc="'{0:,.0f}'.format(ten_percent_rate['amount'])"/>
+                                        <t t-set="ten_percent_rate" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'10PA')"/>
+                                        <span t-esc="'{0:,.2f}'.format(ten_percent_rate['amount'])"/>
                                     </td>
                                     <td align="right">
-                                        <span t-esc="'{0:,.0f}'.format(ten_percent_rate['amount']*0.10)"/>
+                                        <t t-set="ten_PPIT" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'10PPIT')"/>
+                                        <span t-esc="'{0:,.2f}'.format(ten_PPIT['amount'])"/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -185,11 +195,12 @@
                                     <td align="right"><span t-esc="'{0:,.0f}'.format(20000000)"/></td>
                                     <td align="center">15%</td>
                                     <td align="right">
-                                        <t t-set="fifteen_percent_rate" t-value="doc.get_fifteen_percent_rate(total_taxable_income,20000000)"/>
-                                        <span t-esc="'{0:,.0f}'.format(fifteen_percent_rate['amount'])"/>
+                                        <t t-set="fifteen_percent_rate" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'15PA')"/>
+                                        <span t-esc="'{0:,.2f}'.format(fifteen_percent_rate['amount'])"/>
                                     </td>
                                     <td align="right">
-                                        <span t-esc="'{0:,.0f}'.format(fifteen_percent_rate['amount']*0.15)"/>
+                                        <t t-set="fifteen_PPIT" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'15PPIT')"/>
+                                        <span t-esc="'{0:,.2f}'.format(fifteen_PPIT['amount'])"/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -198,11 +209,12 @@
                                     <td align="right"><span t-esc="'{0:,.0f}'.format(20000000)"/></td>
                                     <td align="center">20%</td>
                                     <td align="right">
-                                        <t t-set="twenty_percent_rate" t-value="doc.get_twenty_percent_rate(total_taxable_income,20000000)"/>
-                                        <span t-esc="'{0:,.0f}'.format(twenty_percent_rate['amount'])"/>
+                                        <t t-set="twenty_percent_rate" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'20PA')"/>
+                                        <span t-esc="'{0:,.2f}'.format(twenty_percent_rate['amount'])"/>
                                     </td>
                                     <td align="right">
-                                        <span t-esc="'{0:,.0f}'.format(twenty_percent_rate['amount']*0.20)"/>
+                                        <t t-set="twenty_PPIT" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'20PPIT')"/>
+                                        <span t-esc="'{0:,.2f}'.format(twenty_PPIT['amount'])"/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -211,21 +223,31 @@
                                     <td></td>
                                     <td align="center">25%</td>
                                     <td align="right">
-                                        <t t-set="twenty_five_percent_rate" t-value="doc.get_twenty_five_percent_rate(total_taxable_income)"/>
-                                        <span t-esc="'{0:,.0f}'.format(twenty_five_percent_rate['amount'])"/>
+                                        <t t-set="twenty_five_percent_rate" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'25PA')"/>
+                                        <span t-esc="'{0:,.2f}'.format(twenty_five_percent_rate['amount'])"/>
                                     </td>
                                     <td align="right">
-                                        <span t-esc="'{0:,.0f}'.format(twenty_five_percent_rate['amount']*0.25)"/>
+                                        <t t-set="twenty_five_PPIT" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'25PPIT')"/>
+                                        <span t-esc="'{0:,.2f}'.format(twenty_five_PPIT['amount'])"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="4" align="right">Total Payable PIT for FY <t t-esc="info['fiscal_year']"/> (<t t-esc="info['start_month']"/> <t t-esc="info['start_year']"/> to <t t-esc="info['end_month']"/> <t t-esc="info['end_year']"/>)</td>
-                                    <td align="right"><span t-esc="'{0:,.0f}'.format(zero_percent_rate['amount']+five_percent_rate['amount']+ten_percent_rate['amount']+fifteen_percent_rate['amount']+twenty_percent_rate['amount']+twenty_five_percent_rate['amount'])"/></td>
-                                    <td align="right"><span t-esc="'{0:,.0f}'.format(zero_percent_rate['amount']*0+five_percent_rate['amount']*0.05+ten_percent_rate['amount']*0.10+fifteen_percent_rate['amount']*0.15+twenty_percent_rate['amount']*0.20+twenty_five_percent_rate['amount']*0.25)"/></td>
+                                    <td align="right">
+                                        <t t-set="PIT_ATI" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'ATI')"/>
+                                        <span t-esc="'{0:,.2f}'.format(PIT_ATI['amount'])"/>
+                                    </td>
+                                    <td align="right">
+                                        <t t-set="PIT_APT" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'APT')"/>
+                                        <span t-esc="'{0:,.2f}'.format(PIT_APT['amount'])"/>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td colspan="5" align="right">Annual Personal Income Tax ("PIT") MMK</td>
-                                    <td align="right"><span t-esc="'{0:,.0f}'.format(zero_percent_rate['amount']*0+five_percent_rate['amount']*0.05+ten_percent_rate['amount']*0.10+fifteen_percent_rate['amount']*0.15+twenty_percent_rate['amount']*0.20+twenty_five_percent_rate['amount']*0.25)"/></td>
+                                    <td align="right">
+                                        <t t-set="APT" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'APT')"/>
+                                        <span t-esc="'{0:,.2f}'.format(APT['amount'])"/>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -239,12 +261,14 @@
                                     <td align="right"><t t-esc="line['name']"/></td>
                                     <td align="right">
                                         <t t-esc="'{0:,.2f}'.format(line['amount'])"/>
-                                        <t t-set="total_income_tax" t-value="total_income_tax+line['amount']"/>
                                     </td>
                                 </tr>
                             </t>
                             <tr>
-                                <td colspan="2" align="right"><t t-esc="'{0:,.2f}'.format(total_income_tax)"/></td>
+                                <td colspan="2" align="right">
+                                    <t t-set="final_APT" t-value="doc.get_annual_total_income(doc,info['fiscal_year_id'],'APT')"/>
+                                    <span t-esc="'{0:,.2f}'.format(final_APT['amount'])"/>
+                                </td>
                             </tr>
                         </table>
                     </t>
