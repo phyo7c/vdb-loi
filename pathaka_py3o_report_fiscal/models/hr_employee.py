@@ -50,9 +50,6 @@ class AccountMove(models.Model):
                             if len(split_num[1]) == 1:
                                 total = total+'0'
                         return total
-                        break
-            else:
-                return 0.0
         return 0.0
 
     def _get_batches_tax_no(self, i, month, fiscal):

@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='payslip_currency_id']" position="after">
                     <field name="currency_rate" readonly="True"/>
+                    <field name="insurance_amt" readonly="True"/>
                 </xpath>
             </field>
         </record>
