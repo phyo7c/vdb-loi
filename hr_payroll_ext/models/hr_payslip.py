@@ -9,6 +9,8 @@ class HRPaySlip(models.Model):
 
     currency_rate = fields.Float('Currency Rate')
     previous_income = fields.Float('Previous Income', compute='_compute_previous_amount', store=True)
+    previous_payslip_income_net = fields.Float('Previous Net Income', compute='_compute_previous_amount', store=True)
+    previous_payslip_income_gross = fields.Float('Previous Gross Income', compute='_compute_previous_amount', store=True)
     previous_tax_paid = fields.Float('Previous Tax Paid', compute='_compute_previous_amount', store=True)
     remaining_months = fields.Integer('Remaining Months', compute='_compute_previous_amount', store=True)
     badge_id = fields.Integer('Badge ID', compute='_get_employee_id', store=True)
@@ -27,6 +29,7 @@ class HRPaySlip(models.Model):
     @api.depends('employee_id', 'date_from', 'date_to')
     def _compute_previous_amount(self):
         for slip in self:
+            previous_payslip_income_net = previous_payslip_income_gross = 0
             prev_income = slip.employee_id.pre_income_total
             prev_tax_paid = slip.employee_id.pre_tax_paid
             remaining_months = 0
@@ -39,7 +42,8 @@ class HRPaySlip(models.Model):
             if fiscal_year:
                 remaining_months = relativedelta(fiscal_year.date_to, slip.date_to).months
                 if slip.employee_id.joining_date and fiscal_year.date_from < slip.employee_id.joining_date < fiscal_year.date_to:
-                    prev_income = slip.employee_id.pre_income_total
+                    #prev_income = slip.employee_id.pre_income_total
+
                     prev_tax_paid = slip.employee_id.pre_tax_paid
                 if slip.employee_id.joining_date and slip.employee_id.joining_date > fiscal_year.date_from:
                     total_months = 12 - relativedelta(slip.employee_id.joining_date, fiscal_year.date_from).months
@@ -54,14 +58,17 @@ class HRPaySlip(models.Model):
                     deductions = slipline_obj.sudo().search([('slip_id', '=', pay.id), ('code', '=', 'DEDUCTION')])
                     tax_paid = slipline_obj.sudo().search([('slip_id', '=', pay.id), ('code', '=', 'PIT')])
                     absents = slipline_obj.sudo().search([('slip_id', '=', pay.id), ('code', '=', 'ABSENCE')])
-                    prev_income += basic and basic.total or 0
-                    prev_income -= sum([abs(ded.total) for ded in deductions])
-                    prev_income -= sum([abs(dedabs.total) for dedabs in absents])
+                    previous_payslip_income_gross += basic and basic.total or 0
+                    previous_payslip_income_net += basic and basic.total or 0
+                    previous_payslip_income_net -= sum([abs(ded.total) for ded in deductions])
+                    previous_payslip_income_net -= sum([abs(dedabs.total) for dedabs in absents])
                     prev_tax_paid += tax_paid and tax_paid.total or 0
 
             #sunday_unpaid = self._get_sunday_list(slip.employee_id, slip.date_from, slip.date_to)
             slip.remaining_months = remaining_months
-            slip.previous_income = prev_income
+            slip.previous_income = slip.employee_id.pre_income_total
+            slip.previous_payslip_income_net = previous_payslip_income_net
+            slip.previous_payslip_income_gross = previous_payslip_income_gross
             slip.previous_tax_paid = prev_tax_paid
             #slip.total_months = total_months
             #slip.sunday_unpaid = 0  # sunday_unpaid
