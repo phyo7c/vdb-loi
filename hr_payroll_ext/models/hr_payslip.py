@@ -12,6 +12,7 @@ class HRPaySlip(models.Model):
     previous_payslip_income_net = fields.Float('Previous Net Income', compute='_compute_previous_amount', store=True)
     previous_payslip_income_gross = fields.Float('Previous Gross Income', compute='_compute_previous_amount', store=True)
     previous_tax_paid = fields.Float('Previous Tax Paid', compute='_compute_previous_amount', store=True)
+    previous_payslip_tax = fields.Float('Previous Tax Paid', compute='_compute_previous_amount', store=True)
     remaining_months = fields.Integer('Remaining Months', compute='_compute_previous_amount', store=True)
     badge_id = fields.Integer('Badge ID', compute='_get_employee_id', store=True)
     insurance_amt = fields.Float('Insurance Amount')
@@ -29,7 +30,7 @@ class HRPaySlip(models.Model):
     @api.depends('employee_id', 'date_from', 'date_to')
     def _compute_previous_amount(self):
         for slip in self:
-            previous_payslip_income_net = previous_payslip_income_gross = 0
+            previous_payslip_income_net = previous_payslip_income_gross = previous_payslip_tax = 0
             prev_income = slip.employee_id.pre_income_total
             prev_tax_paid = slip.employee_id.pre_tax_paid
             remaining_months = 0
@@ -62,7 +63,7 @@ class HRPaySlip(models.Model):
                     previous_payslip_income_net += basic and basic.total or 0
                     previous_payslip_income_net -= sum([abs(ded.total) for ded in deductions])
                     previous_payslip_income_net -= sum([abs(dedabs.total) for dedabs in absents])
-                    prev_tax_paid += tax_paid and tax_paid.total or 0
+                    previous_payslip_tax += tax_paid and tax_paid.total or 0
 
             #sunday_unpaid = self._get_sunday_list(slip.employee_id, slip.date_from, slip.date_to)
             slip.remaining_months = remaining_months
@@ -70,6 +71,7 @@ class HRPaySlip(models.Model):
             slip.previous_payslip_income_net = previous_payslip_income_net
             slip.previous_payslip_income_gross = previous_payslip_income_gross
             slip.previous_tax_paid = prev_tax_paid
+            slip.previous_payslip_tax = previous_payslip_tax
             #slip.total_months = total_months
             #slip.sunday_unpaid = 0  # sunday_unpaid
             #slip.half_month_day = 0
