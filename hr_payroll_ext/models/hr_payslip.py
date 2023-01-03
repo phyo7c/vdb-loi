@@ -55,14 +55,15 @@ class HRPaySlip(models.Model):
                 for pay in payslips:
                     slipline_obj = self.env['hr.payslip.line']
                     basic = slipline_obj.sudo().search([('slip_id', '=', pay.id), ('code', '=', 'NET')])
+                    gross = slipline_obj.sudo().search([('slip_id', '=', pay.id), ('code', '=', 'GROSS')])
                     # deductions = slipline_obj.search([('slip_id', '=', pay.id), ('code', 'in', ('UNPAID', 'SSB'))])
                     deductions = slipline_obj.sudo().search([('slip_id', '=', pay.id), ('code', '=', 'DEDUCTION')])
                     tax_paid = slipline_obj.sudo().search([('slip_id', '=', pay.id), ('code', '=', 'PIT')])
                     absents = slipline_obj.sudo().search([('slip_id', '=', pay.id), ('code', '=', 'ABSENCE')])
-                    previous_payslip_income_gross += basic and basic.total or 0
+                    previous_payslip_income_gross += gross and gross.total or 0
                     previous_payslip_income_net += basic and basic.total or 0
-                    previous_payslip_income_net -= sum([abs(ded.total) for ded in deductions])
-                    previous_payslip_income_net -= sum([abs(dedabs.total) for dedabs in absents])
+                    #previous_payslip_income_net -= sum([abs(ded.total) for ded in deductions])
+                    #previous_payslip_income_net -= sum([abs(dedabs.total) for dedabs in absents])
                     previous_payslip_tax += tax_paid and tax_paid.total or 0
 
             #sunday_unpaid = self._get_sunday_list(slip.employee_id, slip.date_from, slip.date_to)
